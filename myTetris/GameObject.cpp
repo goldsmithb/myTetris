@@ -69,7 +69,7 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 
 /*			PUBLIC METHODS			*/
 
-GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize, Piece pieceType) {
+GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize, Piece pieceTypeID) {
 	// copy the value of gUnit
 	unit = unitSize;
 	
@@ -78,6 +78,7 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Pos
 	pos.y = XY.y;
 	cnt = 0;
 	speed = 60;
+	pieceType = pieceTypeID;
 
 	// TODO : make obsolete by subclassing ?
 	//		 WAIT LOL  - this is already obscolete because it vector's can have any size!!! ?
@@ -134,28 +135,22 @@ void GameObject::move(Position newXY) { pos = newXY;  }
 // TODO (optimization) pass enum SDL_KeyCode instead of entire event
 void GameObject::rotate(SDL_Event event) {
 	int res;
-	Piece a = Piece::N;
-	Rotation b = Rotation::First;
-	//printPiece(piecesGuide.at(int(a)).at(int(b)));    // ERROR - sanity check
 	int total = int(Rotation::RotationsTotal);
-	std::cout << "in GameObject::rotate()" << std::endl;
+
+	//std::cout << "in GameObject::rotate()" << std::endl; // ERROR TODO add logging?
+
 	switch (event.key.keysym.sym) {
 	case SDLK_z:
 		// Rotate counter-clockwise
-		std::cout << "rotate clockwise!\nold rotation: " << int(rotation) <<std::endl;	// ERROR
-		res = int(rotation) - 1; // TODO yucky casting
-		rotation = Rotation(res % total);
-		std::cout << "new rotation : " << int(rotation) << std::endl;    // EROOR
-		printPiece(piecesGuide.at(int(pieceType)).at(int(rotation)));    // ERROR <-- illegal !!!
+		res = int(rotation) - 1; // TODO yucky casting - make static casting?
+		if (res < 0) { res = 3; }
+		rotation = Rotation(std::abs(res % total));
 		pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
 		break;
 	case SDLK_x:
-		// Rotate clockwise --> rotation++ % 4
-		std::cout << "rotate clockwise!\nold rotation: " << int(rotation) << std::endl;	// ERROR
+		// Rotate clockwise
 		res = int(rotation) + 1; // TODO yucky casting
-		rotation = Rotation(res % total);
-		std::cout << "new rotation : " << int(rotation) << std::endl;    // EROOR
-		printPiece(piecesGuide.at(int(pieceType)).at(int(rotation)));    // ERROR
+		rotation = Rotation(std::abs(res % total));
 		pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
 		break;
 	default:
