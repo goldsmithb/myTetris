@@ -1,23 +1,23 @@
 #include "GameObject.h"
 
 /* TODO: 
- * - DEBUG : : : : GameObject::rotate(SDL_Event event) 
  * - subclasses for pieces and the game field (inheret from GameObject)?
  *		- because it simplifies initializing
  *		- because pieces rotate but the field doesn't have too
  *		- just need to make sure the collision detection (when written)
  *		  works for a gameObject of any size (should be okay)
  * - header just for the grand piece array
- *		- complete the grand piece array
+ *		- Solution?: solve by subclassing
  *
  *
  */
 
 
-/*		ENUM DEFINITION			*/
-// TODO : put in a header
+/*		piecesGuide :
+/* The 4D char array describing all the different types of pieces
+ * in the game. */
 std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
-{ 
+{
 	// square = 0
 	{
 		// Default - no rotations
