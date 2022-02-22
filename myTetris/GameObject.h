@@ -49,12 +49,12 @@ typedef struct Color {
 class GameObject {
 
 public:
-	// Constructor
+	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
 	// TODO pass SDL_Renderer by reference !! in non C style :)
 	GameObject(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize);
 	GameObject();
-	~GameObject();
+	//~GameObject();
 
 
 	/*		METHODS			*/
@@ -65,10 +65,7 @@ public:
 	// move the gameObject to the given position
 	void move(Position newXY);
 
-
-
-
-	/* render
+	/* render()
 	 * render the objcet to the screen
 	 * this means drawing the rectangle to the window
 	 */

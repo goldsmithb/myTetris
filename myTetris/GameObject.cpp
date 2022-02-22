@@ -8,6 +8,10 @@
  *		  works for a gameObject of any size (should be okay)
  * - header just for the grand piece array
  *		- Solution?: solve by subclassing
+ * - Collision detection
+ * - gameField Subclass
+ *		- renderBackGround()
+ * - Pieces Queue
  *
  *
  */
@@ -16,6 +20,20 @@
 /*			PUBLIC METHODS			*/
 // TODO this is needed in order to have a subclass. Is there a more elegant workaround?
 GameObject::GameObject() {
+	unit = 0;
+	pos.x = 0;
+	pos.y = 0;
+	width = height = 0;
+
+	// copy the RGBs
+	color = { 0,0,0 };
+
+
+	// retrieve pointer to global renderer
+	renderer = NULL;
+
+	// Set rect's width and height to 1x1
+	rect.w = rect.h = 0;
 }
 
 GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize) {
@@ -26,20 +44,18 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Pos
 	pos.x = XY.x;
 	pos.y = XY.y;
 
-
-
 	// TODO : make obsolete by subclassing ?
 	//		 WAIT LOL  - this is already obscolete because it vector's can have any size!!! ?
 	width = w, height = h;
 
-
-
 	// copy the RGBs
 	color = c;
 
-
 	// retrieve pointer to global renderer
 	renderer = ren;
+
+	// Set rect's width and height to 1x1
+	rect.w = rect.h = unitSize;
 }
 
 void GameObject::move(int dx, int dy) {
@@ -67,7 +83,7 @@ void GameObject::render() {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
 
 	int jWidth, iHeight;
-	jWidth = iHeight = 5; 
+	jWidth = iHeight = 5;
 
 
 	// Render the "pixels"

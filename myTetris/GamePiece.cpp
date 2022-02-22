@@ -83,9 +83,6 @@ GamePiece::GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int 
 	default:
 		break;
 	}*/
-
-	// Set rect's width and height to 1x1
-	rect.w = rect.h = unitSize;
 }
 
 void GamePiece::update() {
