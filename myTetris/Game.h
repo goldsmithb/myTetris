@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 #include "TextureManager.h"
 #include "GameObject.h"
+#include "GamePiece.h"
 
 
 /*		GLOBAL VARIABLES		*/
