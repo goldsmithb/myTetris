@@ -73,7 +73,6 @@ public:
 
 	void printGameObjectVector(std::vector<std::vector<char>> array);
 
-
 protected:
 	Position pos;
 

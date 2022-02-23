@@ -57,6 +57,8 @@ public:
 	// This means changing the rotation value and the pixelArray ptr
 	void rotate(SDL_Event event);
 
+	void printRendererPtr();
+
 private:
 	/*      PROPERTIES  */
 	int cnt; // for counting until fall speed

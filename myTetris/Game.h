@@ -39,7 +39,7 @@ public:
     // checks if the game is currently running
     bool running() { return isRunning; }
 
-    // TODO : add these properties
+    // TODO : add these properties:
     // 
     // GameObject currentBlock;
     // std::vector<GameObject> blockQueue

@@ -58,11 +58,12 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 
 GamePiece::GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize, Piece pieceTypeID) {
 	// Call superclass constructor
+	std::cout << "called gamePiece override constructor" << std::endl; // ERROR
 	GameObject(ren, w, h, c, XY, unitSize);
 	
 	// Initialize cnt to 0 - used with speed
 	cnt = 0;
-	// Initialize speed to 60 --> fall every 60 frames (1 second)
+	// Initialize speed to 60 ==> fall every 60 frames (1 second)
 	speed = 60;
 
 	pieceType = pieceTypeID;
@@ -72,17 +73,14 @@ GamePiece::GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int 
 
 	// create the pixelVec for appropriate PieceType at default rotation
 	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
-	/*
-	switch (pieceType) {
-	case Piece::Square :
-		pixelVec = piecesGuide.at(int(Piece::Square)).at(int(rotation));
-		break;
-	case Piece::N :
-		pixelVec = piecesGuide.at(int(Piece::N)).at(int(rotation));
-		break;
-	default:
-		break;
-	}*/
+
+	std::cout << "Created piece!" << std::endl; // ERROR
+	printGameObjectVector(pixelVec);			// ERROR
+	std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl;		// ERROR
+}
+
+void GamePiece::printRendererPtr() {
+	std::cout << "print renderer ptr: renderer pts to " << int(renderer) << std::endl;		// ERROR
 }
 
 void GamePiece::update() {
@@ -93,6 +91,7 @@ void GamePiece::update() {
 	// if enough frames have elapsed, fall 1 unit
 	if ((cnt % speed) == 0) {
 		pos.y += 50;
+		std::cout << "FALL!" << std::endl;
 	}
 
 	// save this state into rect so that it can be rendered
@@ -105,7 +104,7 @@ void GamePiece::rotate(SDL_Event event) {
 	int res;
 	int total = int(Rotation::RotationsTotal);
 
-	//std::cout << "in GameObject::rotate()" << std::endl; // ERROR TODO add logging?
+	//std::cout << "in GameObject::rotate()" << std::endl; // ERROR
 
 	switch (event.key.keysym.sym) {
 	case SDLK_z:

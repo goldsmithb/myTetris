@@ -18,25 +18,28 @@
 
 
 /*			PUBLIC METHODS			*/
-// TODO this is needed in order to have a subclass. Is there a more elegant workaround?
+// TODO this seems to be needed in order to have a subclass. Is there a more elegant workaround?
 GameObject::GameObject() {
+	std::cout << "Called default GameObject constructor" << std::endl;; // ERROR
 	unit = 0;
 	pos.x = 0;
 	pos.y = 0;
 	width = height = 0;
 
 	// copy the RGBs
-	color = { 0,0,0 };
+	color = { 0xff,0,0xff };
 
 
 	// retrieve pointer to global renderer
-	renderer = NULL;
+	renderer = nullptr;
 
 	// Set rect's width and height to 1x1
-	rect.w = rect.h = 0;
+	rect.w = rect.h = 100;
+	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 }
 
 GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize) {
+	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
 	// copy the value of gUnit
 	unit = unitSize;
 	
@@ -53,6 +56,10 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Pos
 
 	// retrieve pointer to global renderer
 	renderer = ren;
+
+	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
+	std::cout << "&ren (the paramater given) = " << int(ren) << std::endl;		// ERROR
+
 
 	// Set rect's width and height to 1x1
 	rect.w = rect.h = unitSize;
@@ -77,7 +84,20 @@ void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
 
 void GameObject::move(Position newXY) { pos = newXY;  }
 
+SDL_Rect rect1;
+
 void GameObject::render() {
+	// ERROR : renderer is nullptr
+	//std::cout << "Rendering GameObject" << std::endl;
+
+	rect1.x = 0;
+	rect1.y = 0;
+	rect1.w = rect1.h = 50;
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff); // TODO set as a bg color
+	SDL_RenderFillRect(renderer, &rect1); // draw rect
+	
+	return;
 
 	// Set render draw color
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
