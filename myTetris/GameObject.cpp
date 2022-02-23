@@ -72,20 +72,8 @@ void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
 
 void GameObject::move(Position newXY) { pos = newXY;  }
 
-SDL_Rect rect1;
 
 void GameObject::render() {
-	// ERROR : renderer is nullptr
-	//std::cout << "Rendering GameObject" << std::endl;
-
-	rect1.x = 0;
-	rect1.y = 0;
-	rect1.w = rect1.h = 50;
-
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff); // TODO set as a bg color
-	SDL_RenderFillRect(renderer, &rect1); // draw rect
-	
-	return;
 
 	// Set render draw color
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
