@@ -45,7 +45,17 @@ class GamePiece : public GameObject {
 
 public:
 
-	GamePiece(SDL_Renderer* ren, Color c, int unitSize, Piece PieceTypeID, int winW, int winH);
+	/* GamePiece(..) constructor
+	 *		ren :			global renderer passed in from Game.cpp
+	 *		unitSize :		the global unit size defined in Game.h. # of pixels in 1 unit
+	 *		PieceTypeID :	determines the type of piece to create
+	 *		winW :			width of the app window in pixels
+	 *		winH :			height of the app window in pixels
+	 *		GFXY :			position of the gameField. Needed to determine the starting position of the piece
+	 *
+	 * 
+	 */
+	GamePiece(SDL_Renderer* ren, int unitSize, Piece PieceTypeID, int GFWidth, Position GFXY);
 	~GamePiece();
 
 	/*		METHODS		*/

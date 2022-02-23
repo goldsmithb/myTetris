@@ -38,8 +38,8 @@ GameObject::GameObject() {
 	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 }
 
-GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, int unitSize) 
-	: renderer(ren), unit(unitSize), color(c), width(w), height(h)
+GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, int unitSize) 
+	: renderer(ren), unit(unitSize), width(w), height(h)
 {
 	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
 
@@ -51,10 +51,11 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, int
 }
 
 void GameObject::move(int dx, int dy) {
-	pos.x += dx;
-	pos.y += dy;
+	pos.x += unit * dx;
+	pos.y += unit * dy;
 }
 
+void GameObject::move(Position newXY) { pos = newXY; }
 
 // TODO document - for debugging purposes
 void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
@@ -67,8 +68,7 @@ void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
 	}
 }
 
-void GameObject::move(Position newXY) { pos = newXY;  }
-
+Position GameObject::getPos() { return pos;  }
 
 void GameObject::render() {
 	// Set render draw color

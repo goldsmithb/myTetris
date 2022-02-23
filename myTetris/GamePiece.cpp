@@ -56,8 +56,8 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 };
 
 
-GamePiece::GamePiece(SDL_Renderer* ren, Color c, int unitSize, Piece pieceTypeID, int winW, int winH)
-	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT, c, unitSize), 
+GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFWidth, Position GFXY)
+	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT, unitSize), 
 	  cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
 {
 	std::cout << "called gamePiece override constructor" << std::endl;	// ERROR
@@ -65,8 +65,11 @@ GamePiece::GamePiece(SDL_Renderer* ren, Color c, int unitSize, Piece pieceTypeID
 	// set Piece's position to middle of the screen
 	// TODO : this changes based on the pieceType and the position of the game field
 	//		  so this is all wrong lol
-	pos.x = unitSize * (((winW / unitSize) - PIECE_WIDTH_HEIGHT) / 2);
-	pos.y = 0;
+	pos.x = GFXY.x;
+	pos.y = GFXY.y;
+	//pos.x += unit * (((GFWidth / unit) - PIECE_WIDTH_HEIGHT) / 2);
+
+	color = { 0xff, 0, 0 };
 
 	// create the pixelVec for appropriate PieceType at default rotation
 	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));

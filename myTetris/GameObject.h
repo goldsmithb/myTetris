@@ -54,7 +54,7 @@ public:
 	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
 	// TODO pass SDL_Renderer by reference !! in non C style :)
-	GameObject(SDL_Renderer* ren, int w, int h, Color c, int unitSize);
+	GameObject(SDL_Renderer* ren, int w, int h, int unitSize);
 	GameObject();
 	//~GameObject();
 
@@ -62,6 +62,7 @@ public:
 	/*		METHODS			*/
 
 	// move the gameObject by the given amount
+	// dx, dy given in units
 	void move(int dx, int dy);
 
 	// move the gameObject to the given position
@@ -74,6 +75,8 @@ public:
 	virtual void render();
 
 	void printGameObjectVector(std::vector<std::vector<char>> array);
+
+	Position getPos();
 
 protected:
 	Position pos;		// position of the top-left corner, in pixels

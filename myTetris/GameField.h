@@ -18,4 +18,5 @@ public:
 
 private:
 	SDL_Rect fieldRect;
+	Color bgColor;
 };

@@ -44,9 +44,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load all the gameObjects!
         // TODO for now w and h aren't used (may not need if we end up subclassing)
         // TODO for now, just make the current piece an N piece
-        currentPiece = new GamePiece(renderer, gBackGroundColor, gUnit, Piece::N, width, height);
-        
         gameField = new GameField(renderer, lightBlue, gUnit, width, height);
+
+        // Make the first piece
+        currentPiece = new GamePiece(renderer, gUnit, Piece::N, FIELD_WIDTH, gameField->getPos());
+        
     }
     else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
@@ -60,16 +62,16 @@ void Game::processKeyEvent(SDL_Event event) {
 
     switch (event.key.keysym.sym) {
     case SDLK_UP:
-        currentPiece->move(0, -5);
+        currentPiece->move(0, -1);
         break;
     case SDLK_DOWN:
-        currentPiece->move(0, 5);
+        currentPiece->move(0, 1);
         break;
     case SDLK_LEFT:
-        currentPiece->move(-5, 0);
+        currentPiece->move(-1, 0);
         break;
     case SDLK_RIGHT:
-        currentPiece->move(5, 0);
+        currentPiece->move(1, 0);
         break;
     case SDLK_x:
     case SDLK_z:
