@@ -56,20 +56,16 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 };
 
 
-GamePiece::GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize, Piece pieceTypeID) {
+GamePiece::GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize, Piece pieceTypeID) 
+	: GameObject(ren, w, h, c, XY, unitSize), cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
+{
 	// Call superclass constructor
 	std::cout << "called gamePiece override constructor" << std::endl; // ERROR
-	GameObject(ren, w, h, c, XY, unitSize);
 	
 	// Initialize cnt to 0 - used with speed
-	cnt = 0;
 	// Initialize speed to 60 ==> fall every 60 frames (1 second)
-	speed = 60;
-
-	pieceType = pieceTypeID;
 
 	// default rotation 
-	rotation = Rotation::Default;
 
 	// create the pixelVec for appropriate PieceType at default rotation
 	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));

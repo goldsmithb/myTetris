@@ -38,28 +38,16 @@ GameObject::GameObject() {
 	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 }
 
-GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize) {
+GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize) 
+	: pos(XY), renderer(ren), unit(unitSize), color(c), width(w), height(h)
+{
 	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
-	// copy the value of gUnit
-	unit = unitSize;
 	
-	// Default position for all blocks will be center top
-	pos.x = XY.x;
-	pos.y = XY.y;
-
-	// TODO : make obsolete by subclassing ?
+	// TODO : make w,h obsolete by subclassing ?
 	//		 WAIT LOL  - this is already obscolete because it vector's can have any size!!! ?
-	width = w, height = h;
-
-	// copy the RGBs
-	color = c;
-
-	// retrieve pointer to global renderer
-	renderer = ren;
 
 	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 	std::cout << "&ren (the paramater given) = " << int(ren) << std::endl;		// ERROR
-
 
 	// Set rect's width and height to 1x1
 	rect.w = rect.h = unitSize;
