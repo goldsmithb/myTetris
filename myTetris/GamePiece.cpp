@@ -56,23 +56,24 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 };
 
 
-GamePiece::GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize, Piece pieceTypeID) 
-	: GameObject(ren, w, h, c, XY, unitSize), cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
+GamePiece::GamePiece(SDL_Renderer* ren, Color c, int unitSize, Piece pieceTypeID, int winW, int winH)
+	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT, c, unitSize), 
+	  cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
 {
-	// Call superclass constructor
-	std::cout << "called gamePiece override constructor" << std::endl; // ERROR
-	
-	// Initialize cnt to 0 - used with speed
-	// Initialize speed to 60 ==> fall every 60 frames (1 second)
+	std::cout << "called gamePiece override constructor" << std::endl;	// ERROR
 
-	// default rotation 
+	// set Piece's position to middle of the screen
+	// TODO : this changes based on the pieceType and the position of the game field
+	//		  so this is all wrong lol
+	pos.x = unitSize * (((winW / unitSize) - PIECE_WIDTH_HEIGHT) / 2);
+	pos.y = 0;
 
 	// create the pixelVec for appropriate PieceType at default rotation
 	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
 
-	std::cout << "Created piece!" << std::endl; // ERROR
-	printGameObjectVector(pixelVec);			// ERROR
-	std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl;		// ERROR
+	std::cout << "Created piece!" << std::endl;							// ERROR
+	printGameObjectVector(pixelVec);									// ERROR
+	std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl; // ERROR
 }
 
 void GamePiece::printRendererPtr() {
@@ -86,7 +87,7 @@ void GamePiece::update() {
 	cnt += 1;
 	// if enough frames have elapsed, fall 1 unit
 	if ((cnt % speed) == 0) {
-		pos.y += 50;
+		pos.y += unit;
 		std::cout << "FALL!" << std::endl;
 	}
 

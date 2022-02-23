@@ -5,7 +5,9 @@
 #include <SDL.h>
 #include <cmath>
 
-/*      FORWARD DECLARATIONS   */
+/*      CONSTANTS		*/
+const int FIELD_WIDTH = 15;			// gameField width in units
+const int FIELD_HEIGHT = 28;		// gameField height in units
 
 
 /*      STRUCTS                 */
@@ -52,7 +54,7 @@ public:
 	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
 	// TODO pass SDL_Renderer by reference !! in non C style :)
-	GameObject(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize);
+	GameObject(SDL_Renderer* ren, int w, int h, Color c, int unitSize);
 	GameObject();
 	//~GameObject();
 
@@ -69,12 +71,12 @@ public:
 	 * render the objcet to the screen
 	 * this means drawing the rectangle to the window
 	 */
-	void render();
+	virtual void render();
 
 	void printGameObjectVector(std::vector<std::vector<char>> array);
 
 protected:
-	Position pos;
+	Position pos;		// position of the top-left corner, in pixels
 
 	// 2D vector telling us which grid squares are occupied
 	std::vector<std::vector<char>> pixelVec;
@@ -84,12 +86,12 @@ protected:
 
 	// renderer needed for rendering. Will pass in game renderer by reference
 	SDL_Renderer* renderer;
-
-private:
+	
 	unsigned char unit; // for storing the gUnit value // QUESTION this seems inelegant, to copy it
-
+	
 	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
 
+private:
 	int width, height; // TODO move to GameField Subclass
 
 	// translate the local array coordinates to the global window coordinates

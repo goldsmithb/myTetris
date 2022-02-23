@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
+/*		CONSTANTS		*/
+const int PIECE_WIDTH_HEIGHT = 5;
 
 /*		ENUMS					*/
 // TODO : create a piece subclass? Q: should a piece and the game field share ALL methods?
@@ -43,7 +45,7 @@ class GamePiece : public GameObject {
 
 public:
 
-	GamePiece(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize, Piece PieceTypeID);
+	GamePiece(SDL_Renderer* ren, Color c, int unitSize, Piece PieceTypeID, int winW, int winH);
 	~GamePiece();
 
 	/*		METHODS		*/

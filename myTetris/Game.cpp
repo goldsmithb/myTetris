@@ -14,7 +14,7 @@ Game::~Game() {
 
 }
 
-// TODO : initialize GameObject properties
+
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
     int flags = 0;
 
@@ -44,7 +44,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load all the gameObjects!
         // TODO for now w and h aren't used (may not need if we end up subclassing)
         // TODO for now, just make the current piece an N piece
-        currentPiece = new GamePiece(renderer, 5, 5, gBackGroundColor, gOrigin, gUnit, Piece::N);
+        currentPiece = new GamePiece(renderer, gBackGroundColor, gUnit, Piece::N, width, height);
+        
+        gameField = new GameField(renderer, lightBlue, gUnit, width, height);
     }
     else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
@@ -109,6 +111,11 @@ void Game::render() {
     // clear render buffer & draw window base color
     SDL_SetRenderDrawColor(renderer, 235, 233, 178, 0xff); // TODO set as a bg color
     SDL_RenderClear(renderer);
+
+
+    // Render Game Field space
+
+    gameField->render();
 
     currentPiece->render();
 

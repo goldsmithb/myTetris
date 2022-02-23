@@ -5,15 +5,17 @@
 #include "TextureManager.h"
 #include "GameObject.h"
 #include "GamePiece.h"
+#include "GameField.h"
 
 
-/*		GLOBAL VARIABLES		*/
+/*		CONSTANTS		*/
 const int gFPS = 60;
 const int gFrameDelay = 1000 / gFPS;
-const int gWidth = 300;
-const int gHeight = 800;
-const int gUnit = 50;
+const int gWidth = 300;                     // window width in # pixels
+const int gHeight = 800;                    // window height in # pixels
+const int gUnit = 15;
 const Color gBackGroundColor = { 200, 162, 200 }; // TODO use this in init
+const Color lightBlue = { 0xcc, 0xe6, 0xff };
 const Position gOrigin = { 0, 0 };
 
 

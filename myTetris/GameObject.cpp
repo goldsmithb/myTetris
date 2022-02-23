@@ -38,19 +38,16 @@ GameObject::GameObject() {
 	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 }
 
-GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize) 
-	: pos(XY), renderer(ren), unit(unitSize), color(c), width(w), height(h)
+GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, int unitSize) 
+	: renderer(ren), unit(unitSize), color(c), width(w), height(h)
 {
 	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
-	
-	// TODO : make w,h obsolete by subclassing ?
-	//		 WAIT LOL  - this is already obscolete because vector's can have any size!!! ?
-
-	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
-	std::cout << "&ren (the paramater given) = " << int(ren) << std::endl;		// ERROR
 
 	// Set rect's width and height to 1x1
 	rect.w = rect.h = unitSize;
+
+	// Create pixel matrix of size h x w and populate with 0's
+	pixelVec.resize(h, std::vector<char>(w, 0));
 }
 
 void GameObject::move(int dx, int dy) {
@@ -74,7 +71,6 @@ void GameObject::move(Position newXY) { pos = newXY;  }
 
 
 void GameObject::render() {
-
 	// Set render draw color
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
 
