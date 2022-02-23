@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 #include "TextureManager.h"
 #include "GameObject.h"
+#include "GamePiece.h"
 
 
 /*		GLOBAL VARIABLES		*/
@@ -38,7 +39,7 @@ public:
     // checks if the game is currently running
     bool running() { return isRunning; }
 
-    // TODO : add these properties
+    // TODO : add these properties:
     // 
     // GameObject currentBlock;
     // std::vector<GameObject> blockQueue

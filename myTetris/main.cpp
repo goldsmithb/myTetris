@@ -36,7 +36,9 @@ int main(int argc, char* argv[]) {
 		if (gFrameDelay > frameTime) {
 			SDL_Delay(gFrameDelay - frameTime);
 		}
-}
+	}
+
+	delete game;
 
 	return 0;
 }

@@ -8,108 +8,48 @@
  *		  works for a gameObject of any size (should be okay)
  * - header just for the grand piece array
  *		- Solution?: solve by subclassing
+ * - Collision detection
+ * - gameField Subclass
+ *		- renderBackGround()
+ * - Pieces Queue
  *
  *
  */
 
 
-/*		piecesGuide :
-/* The 4D char array describing all the different types of pieces
- * in the game. */
-std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
-{
-	// square = 0
-	{
-		// Default - no rotations
-		{
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 0, 0},
-			{0, 0, 2, 1, 0},
-			{0, 0, 1, 1, 0},
-			{0, 0, 0, 0, 0},
-		}
-	},
-	// N = 1
-	{
-		// Default rotation
-		{
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 0, 0},
-			{0, 0, 2, 1, 0},
-			{0, 1, 1, 0, 0},
-			{0, 0, 0, 0, 0},
-		},
-		// First rotation
-		{
-			{0, 0, 0, 0, 0},
-			{0, 1, 0, 0, 0},
-			{0, 1, 2, 0, 0},
-			{0, 0, 1, 0, 0},
-			{0, 0, 0, 0, 0},
-		},
-		// Second Rotation
-		{
-			{0, 0, 0, 0, 0},
-			{0, 0, 1, 1, 0},
-			{0, 1, 2, 0, 0},
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 0, 0},
-		},
-		// Third Rotation
-		{
-			{0, 0, 0, 0, 0},
-			{0, 0, 1, 0, 0},
-			{0, 0, 2, 1, 0},
-			{0, 0, 0, 1, 0},
-			{0, 0, 0, 0, 0},
-		}
-	}
-};
-
-
 /*			PUBLIC METHODS			*/
-
-GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize, Piece pieceTypeID) {
-	// copy the value of gUnit
-	unit = unitSize;
-	
-	// Default position for all blocks will be center top
-	pos.x = XY.x;
-	pos.y = XY.y;
-	cnt = 0;
-	speed = 60;
-	pieceType = pieceTypeID;
-
-	// TODO : make obsolete by subclassing ?
-	//		 WAIT LOL  - this is already obscolete because it vector's can have any size!!! ?
-	width = w, height = h;
-
-	// default rotation 
-	rotation = Rotation::Default;
+// TODO this seems to be needed in order to have a subclass. Is there a more elegant workaround?
+GameObject::GameObject() {
+	std::cout << "Called default GameObject constructor" << std::endl;; // ERROR
+	unit = 0;
+	pos.x = 0;
+	pos.y = 0;
+	width = height = 0;
 
 	// copy the RGBs
-	color = c;
+	color = { 0xff,0,0xff };
 
-	// create the pixelVec
-	// TODO construct based on w and h varibales
-	// for now:
-	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
-	/*  
-	switch (pieceType) {
-	case Piece::Square :
-		pixelVec = piecesGuide.at(int(Piece::Square)).at(int(rotation));
-		break;
-	case Piece::N :
-		pixelVec = piecesGuide.at(int(Piece::N)).at(int(rotation));
-		break;
-	default:
-		break;
-	}*/
 
 	// retrieve pointer to global renderer
-	renderer = ren;
+	renderer = nullptr;
 
-	// set rect's width and height to 1x1
+	// Set rect's width and height to 1x1
+	rect.w = rect.h = 100;
+	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
+}
+
+GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Position XY, int unitSize) 
+	: pos(XY), renderer(ren), unit(unitSize), color(c), width(w), height(h)
+{
+	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
+	
+	// TODO : make w,h obsolete by subclassing ?
+	//		 WAIT LOL  - this is already obscolete because it vector's can have any size!!! ?
+
+	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
+	std::cout << "&ren (the paramater given) = " << int(ren) << std::endl;		// ERROR
+
+	// Set rect's width and height to 1x1
 	rect.w = rect.h = unitSize;
 }
 
@@ -120,7 +60,7 @@ void GameObject::move(int dx, int dy) {
 
 
 // TODO document - for debugging purposes
-void printPiece(std::vector<std::vector<char>> array) {
+void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
 	std::cout << "PRINTING VECTOR:" << '\n';
 	for (std::vector<char> vec : array) {
 		for (char c : vec) {
@@ -132,46 +72,6 @@ void printPiece(std::vector<std::vector<char>> array) {
 
 void GameObject::move(Position newXY) { pos = newXY;  }
 
-// TODO (optimization) pass enum SDL_KeyCode instead of entire event
-void GameObject::rotate(SDL_Event event) {
-	int res;
-	int total = int(Rotation::RotationsTotal);
-
-	//std::cout << "in GameObject::rotate()" << std::endl; // ERROR TODO add logging?
-
-	switch (event.key.keysym.sym) {
-	case SDLK_z:
-		// Rotate counter-clockwise
-		res = int(rotation) - 1; // TODO yucky casting - make static casting?
-		if (res < 0) { res = 3; }
-		rotation = Rotation(std::abs(res % total));
-		pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
-		break;
-	case SDLK_x:
-		// Rotate clockwise
-		res = int(rotation) + 1; // TODO yucky casting
-		rotation = Rotation(std::abs(res % total));
-		pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
-		break;
-	default:
-		break;
-	}
-}
-
-void GameObject::update() {
-	// All blocks fall at base speed 2 units per second
-	// at 60 frames/s that means 1 unit (yet undefined) every 30 frames
-
-	cnt += 1;
-	// if enough frames have elapsed, fall 1 unit
-	if ((cnt % speed) == 0) {
-		pos.y += 50;
-	}
-	
-	// save this state into rect so that it can be rendered
-	rect.x = pos.x;
-	rect.y = pos.y;
-}
 
 void GameObject::render() {
 
@@ -179,10 +79,10 @@ void GameObject::render() {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
 
 	int jWidth, iHeight;
-	jWidth = iHeight = 5; 
+	jWidth = iHeight = 5;
 
 
-
+	// Render the "pixels"
 	for (int i = 0; i < iHeight; i++) {
 		for (int j = 0; j < jWidth; j++) {
 			// render any place there is non-zero
@@ -197,10 +97,6 @@ void GameObject::render() {
 			}
 		}
 	}
-
-
-	// Render the object
-	//SDL_RenderFillRect(renderer, &rect);
 }
 
 

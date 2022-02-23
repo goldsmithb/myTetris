@@ -3,43 +3,10 @@
 #include <iostream>
 #include <vector>
 #include <SDL.h>
-#include <cmath>        // std::abs
+#include <cmath>
 
 /*      FORWARD DECLARATIONS   */
 
-/*		ENUMS					*/
-// TODO : create a piece subclass? Q: should a piece and the game field share ALL methods?
-// TODO : static_cast instead of C-style casting >_<
-// Which type of piece is this Game Object? 
-enum class Piece {
-	Square,
-	N,			// TODO change order for my sanity
-	Nreverse,
-	L,
-	Lreverse,
-	Psi,
-	PiecesTotal
-};
-
-enum class Rotation {
-	Default,
-	First,
-	Second,
-	Third,
-	RotationsTotal
-	
-};
-
-/*		GLOBAL VARIABLES		*/
-/* 4D array for storing all pieces. Each piece and every rotation 
- * of each piece fits in a 5x5 array, so:
- *		D1 : Piece type ( indexed by enum class Piece )
- *		D2 : Piece rotation ( 0 = default, rotate clockwise with each index )
- *		D3 : rows (Y positions) of the local GameObject 5x5 pixel array
- *		D4 : columns (X positoins) of the local GameObject 5x5 pixel array
- */
-// TODO : add rotations. this will require adding another dimension - working on
-extern std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide;
 
 /*      STRUCTS                 */
 // TODO these should probably be in some external, though I haven't decided yet
@@ -82,10 +49,12 @@ typedef struct Color {
 class GameObject {
 
 public:
-	// Constructor
+	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
-	GameObject(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize, Piece pieceTypeID);
-	~GameObject();
+	// TODO pass SDL_Renderer by reference !! in non C style :)
+	GameObject(SDL_Renderer* ren, int w, int h, Color c, Position XY, int unitSize);
+	GameObject();
+	//~GameObject();
 
 
 	/*		METHODS			*/
@@ -96,32 +65,16 @@ public:
 	// move the gameObject to the given position
 	void move(Position newXY);
 
-	// Rotate the block
-	// This means changing the rotation value and the pixelArray
-	void rotate(SDL_Event event);
-
-	/* update()
-	 * update the state of the game object based on game state
-	 */
-	void update();
-
-	/* render
+	/* render()
 	 * render the objcet to the screen
 	 * this means drawing the rectangle to the window
 	 */
 	void render();
 
+	void printGameObjectVector(std::vector<std::vector<char>> array);
 
-private:
-	unsigned char unit; // for storing the gUnit value QUESTION this seems inelegant, to copy it
+protected:
 	Position pos;
-	int cnt; // for counting until fall speed
-	int speed; // how many frames to fall 1 unit - initially 60 or once per second
-	// will be set based on level eventually
-	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
-	Piece pieceType; // piece shape
-	Rotation rotation; // rotation state
-	int width, height;
 
 	// 2D vector telling us which grid squares are occupied
 	std::vector<std::vector<char>> pixelVec;
@@ -132,11 +85,15 @@ private:
 	// renderer needed for rendering. Will pass in game renderer by reference
 	SDL_Renderer* renderer;
 
+private:
+	unsigned char unit; // for storing the gUnit value // QUESTION this seems inelegant, to copy it
+
+	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
+
+	int width, height; // TODO move to GameField Subclass
+
 	// translate the local array coordinates to the global window coordinates
 	Position translateLocalGlobal(int x, int y);
 	// TODO: verbose and unecessary? right now, it would be more lines of code 
 	// to call this function
-	
-
-
 };

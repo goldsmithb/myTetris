@@ -1,6 +1,6 @@
 #include "Game.h"
 
-GameObject* currentPiece;
+GamePiece* currentPiece;
 
 int count = 0;
 
@@ -42,9 +42,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load game 
         // Load all the gameObjects!
         // TODO for now w and h aren't used (may not need if we end up subclassing)
-        //  for now set to 5 bc all pieces are 5x5
-        currentPiece = new GameObject(renderer, 5, 5, gBackGroundColor, gOrigin, gUnit, Piece::N);
-
+        // TODO for now, just make the current piece an N piece
+        currentPiece = new GamePiece(renderer, 5, 5, gBackGroundColor, gOrigin, gUnit, Piece::N);
+        currentPiece->printRendererPtr();
     }
     else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
