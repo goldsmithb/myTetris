@@ -44,7 +44,7 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, Color c, Pos
 	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
 	
 	// TODO : make w,h obsolete by subclassing ?
-	//		 WAIT LOL  - this is already obscolete because it vector's can have any size!!! ?
+	//		 WAIT LOL  - this is already obscolete because vector's can have any size!!! ?
 
 	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 	std::cout << "&ren (the paramater given) = " << int(ren) << std::endl;		// ERROR

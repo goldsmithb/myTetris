@@ -2,17 +2,12 @@
 //#undef main // needed if main() prototype does not match the SDL.h one
 
 
-// TODO : add to github
-
 /*		GLOBAL VARIABLES		*/
 Game* game = NULL;
 
 int main(int argc, char* argv[]) {
 
 	game = new Game();
-
-	game->init("myTetris", SDL_WINDOWPOS_CENTERED, 
-		SDL_WINDOWPOS_CENTERED, gWidth, gHeight, false);
 
 	// Frame rate variables
 	// the time when frame begins (top of game loop)

@@ -28,9 +28,10 @@ public:
     Game();
     ~Game();
 
-    // initialize the game window
+    // initialize SDL, the window, the renderer
     void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 
+    void processKeyEvent(SDL_Event event);
     void handleEvents();
     void update();
     void render();
@@ -39,6 +40,8 @@ public:
     // checks if the game is currently running
     bool running() { return isRunning; }
 
+ 
+
     // TODO : add these properties:
     // 
     // GameObject currentBlock;
@@ -46,9 +49,22 @@ public:
     // GameObject field
 
 private:
-    bool isRunning;
+    const char* windowTitle;        // Title for the window
+    int windowXPos;                 // window X Pos
+    int windowYPos;                 // window Y pos
+    int winW;                       // window width
+    int winH;                       // window height
+    bool fullscreen;                // fullscreen window boolean
+
+    bool isRunning;                 // game loop boolean
+
     SDL_Window* window;
 
-    // Global renderer
-    SDL_Renderer* renderer;
+    SDL_Renderer* renderer;         // Global renderer
+
+    GamePiece* currentPiece;         // Current Piece
+
+    GamePiece** piecesQueue;         // Pieces Queue
+
+    GameObject* gameField;           // Game Field
 };

@@ -1,17 +1,18 @@
 #include "Game.h"
 
-GamePiece* currentPiece;
 
-int count = 0;
-
-Game::Game() {
-
+Game::Game()
+    : windowTitle("myTetris"), windowXPos(SDL_WINDOWPOS_CENTERED), 
+      windowYPos(SDL_WINDOWPOS_CENTERED), winW(gWidth), winH(gHeight), 
+      fullscreen(false), isRunning(false), window(nullptr), renderer(nullptr),
+      currentPiece(nullptr), piecesQueue(nullptr), gameField(nullptr)
+{
+    init(windowTitle, windowXPos, windowYPos, winW, winH, fullscreen);
 }
 
 Game::~Game() {
 
 }
-
 
 // TODO : initialize GameObject properties
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
@@ -44,7 +45,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // TODO for now w and h aren't used (may not need if we end up subclassing)
         // TODO for now, just make the current piece an N piece
         currentPiece = new GamePiece(renderer, 5, 5, gBackGroundColor, gOrigin, gUnit, Piece::N);
-        currentPiece->printRendererPtr();
     }
     else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
@@ -54,7 +54,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 // TODO document
 // Process key press event and update current surface respectively
-void processKeyEvent(SDL_Event event) {
+void Game::processKeyEvent(SDL_Event event) {
 
     switch (event.key.keysym.sym) {
     case SDLK_UP:
