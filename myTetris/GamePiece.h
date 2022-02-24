@@ -11,10 +11,11 @@ const int PIECE_WIDTH_HEIGHT = 5;
 enum class Piece {
 	Square,
 	N,			// TODO change order for my sanity
-	Nreverse,
+	NReverse,
 	L,
-	Lreverse,
+	LReverse,
 	Psi,
+	I,
 	PiecesTotal
 };
 

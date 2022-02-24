@@ -52,6 +52,181 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 			{0, 0, 0, 1, 0},
 			{0, 0, 0, 0, 0},
 		}
+	},
+	// NReverse = 2
+	{
+		// Default rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 1, 2, 0, 0},
+			{0, 0, 1, 1, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// First rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 1, 2, 0, 0},
+			{0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Second Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 1, 1, 0, 0},
+			{0, 0, 2, 1, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Third Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 0},
+			{0, 0, 2, 1, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		}
+	},
+	// L = 3
+	{
+		// Default rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 1, 1, 0, 0},
+			{0, 0, 2, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// First rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 0},
+			{0, 1, 2, 1, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Second Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 2, 0, 0},
+			{0, 0, 1, 1, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Third Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 1, 2, 1, 0},
+			{0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		}
+	},
+	// LReverse = 4
+	{
+		// Default rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 1, 0},
+			{0, 0, 2, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// First rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 1, 2, 1, 0},
+			{0, 0, 0, 1, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Second Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 2, 0, 0},
+			{0, 1, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Third Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 1, 0, 0, 0},
+			{0, 1, 2, 1, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		}
+	},
+	// Psi = 5
+	{
+		// Default rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 1, 2, 1, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// First rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 1, 2, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Second Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 1, 2, 1, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Third Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 2, 1, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		}
+	},
+	// I = 6
+	{
+		// Default rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 2, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+		},
+		// First rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{1, 1, 2, 1, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Second Rotation
+		{
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 2, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+		// Third Rotation
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 1, 2, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		}
 	}
 };
 
@@ -67,7 +242,7 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	//		  so this is all wrong lol
 	pos.x = GFXY.x;
 	pos.y = GFXY.y;
-	//pos.x += unit * (((GFWidth / unit) - PIECE_WIDTH_HEIGHT) / 2);
+	pos.x += unit * ((GFWidth - PIECE_WIDTH_HEIGHT) / 2);
 
 	color = { 0xff, 0, 0 };
 
@@ -91,7 +266,6 @@ void GamePiece::update() {
 	// if enough frames have elapsed, fall 1 unit
 	if ((cnt % speed) == 0) {
 		pos.y += unit;
-		std::cout << "FALL!" << std::endl;
 	}
 
 	// save this state into rect so that it can be rendered
@@ -101,6 +275,12 @@ void GamePiece::update() {
 
 // TODO (optimization) pass enum SDL_KeyCode instead of entire event
 void GamePiece::rotate(SDL_Event event) {
+
+	// Square does not rotate
+	if (pieceType == Piece::Square){
+		return;
+	}
+
 	int res;
 	int total = int(Rotation::RotationsTotal);
 

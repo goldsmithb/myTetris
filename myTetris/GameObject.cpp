@@ -95,6 +95,15 @@ void GameObject::render() {
 	}
 }
 
+/* detectCollision()
+ * 
+ *
+ * 
+ */
+bool detectCollision(GameObject piece, GameObject field) {
+	bool res = false;
+	return res;
+}
 
 /*			PRIVATE METHODS			*/
 

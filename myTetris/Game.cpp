@@ -47,7 +47,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         gameField = new GameField(renderer, lightBlue, gUnit, width, height);
 
         // Make the first piece
-        currentPiece = new GamePiece(renderer, gUnit, Piece::N, FIELD_WIDTH, gameField->getPos());
+        // TODO : fix for square and I
+        currentPiece = new GamePiece(renderer, gUnit, Piece::I, FIELD_WIDTH, gameField->getPos());
         
     }
     else {
