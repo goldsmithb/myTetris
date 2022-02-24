@@ -38,7 +38,7 @@ enum class Rotation {
  *		D4 : columns (X positoins) of the local GameObject 5x5 pixel array
  */
  // TODO : is this necessary? Could just declare and define in the cpp
-extern std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide;
+//extern std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide;
 
 
 /*		CLASSES					*/

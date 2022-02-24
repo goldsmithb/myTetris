@@ -4,7 +4,7 @@
 
 /*		piecesGuide :
 /* The 4D char array describing all the different types of pieces
- * in the game. */
+ * in the game. */ // TODO copy docstring from GamePiece.h
 std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 {
 	// square = 0

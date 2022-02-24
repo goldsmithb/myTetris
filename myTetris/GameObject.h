@@ -49,7 +49,6 @@ typedef struct Color {
  * some amount of translation will eventually be required.
  */
 class GameObject {
-
 public:
 	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
@@ -76,7 +75,13 @@ public:
 
 	void printGameObjectVector(std::vector<std::vector<char>> array);
 
-	Position getPos();
+	Position& accessPos() { return pos; }
+
+	std::vector<std::vector<char>> accessPixelVec() { return pixelVec; }
+
+	int getHeight() { return height; }
+
+	int getWidth() { return width; }
 
 protected:
 	Position pos;		// position of the top-left corner, in pixels
@@ -95,7 +100,7 @@ protected:
 	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
 
 private:
-	int width, height; // TODO move to GameField Subclass
+	int width, height; // TODO are these used?
 
 	// translate the local array coordinates to the global window coordinates
 	Position translateLocalGlobal(int x, int y);

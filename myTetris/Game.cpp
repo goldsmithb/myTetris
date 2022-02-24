@@ -42,16 +42,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         // Load game 
         // Load all the gameObjects!
-        // TODO for now w and h aren't used (may not need if we end up subclassing)
-        // TODO for now, just make the current piece an N piece
+        // TODO : pieces queue
+
         gameField = new GameField(renderer, lightBlue, gUnit, width, height);
 
         // Make the first piece
-        // TODO : fix for square and I
-        currentPiece = new GamePiece(renderer, gUnit, Piece::I, FIELD_WIDTH, gameField->getPos());
+        currentPiece = new GamePiece(renderer, gUnit, Piece::I, FIELD_WIDTH, gameField->accessPos());
         
-    }
-    else {
+    } else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
         isRunning = false;
     }
@@ -101,12 +99,66 @@ void Game::handleEvents() {
     }
 }
 
+// todo if returns true: move the piece up one unit, let the field absorb it :) yum
+// returns: -1 if no collision
+//          0 if collided with the field's floor
+//          1 if collided with a block
+int detectCollision(GameObject piece, GameObject field) {
+    std::vector<std::vector<char>> pieceMatrix, fieldMatrix;
+    pieceMatrix = piece.accessPixelVec(), fieldMatrix = field.accessPixelVec();
+    int fieldHeight = field.getHeight();
+    int fieldWidth = field.getWidth();
+
+    // store piece's pixel pos relative to field's local origin
+    Position fieldGXY = { field.accessPos().x, field.accessPos().y };
+    Position pieceXY = { piece.accessPos().x, piece.accessPos().y };
+    pieceXY.x -= fieldGXY.x;
+    pieceXY.y -= fieldGXY.y;
+    // now convert to block coordinates
+    pieceXY.x /= gUnit;
+    pieceXY.y /= gUnit;
+
+    // QUESTION  is this 4x nested for loop needed? So uggo
+    // TODO check from top to bottom
+    // check for collisions
+    for (int i = 0; i < fieldHeight; i++) {
+        for (int j = 0; j < fieldWidth; j++) {
+            if (fieldMatrix[i][j] != 0 || 
+                i == (fieldHeight - 1))    // always land on bottom row
+            {
+                // check for collision
+                for (int y = 0; y < 5; y++) {
+                    for (int x = 0; x < 5; x++) {
+                        if (pieceMatrix[y][x] != 0) {
+                            if (i == (pieceXY.y + y) && 
+                                j == (pieceXY.x + x)) 
+                            {
+                                // did we collide, or just hit the bottom?
+                                if (fieldMatrix[i][j] == 0) {
+                                    return 0;
+                                } else {
+                                    std::cout << "collision detected!!" << std::endl; // ERROR
+                                    return 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return -1;
+}
 
 void Game::update() { 
 
     // update game variables
 
     currentPiece->update();
+
+    // detect whether a block has landed
+    
 
 }
 

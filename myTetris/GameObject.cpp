@@ -68,8 +68,6 @@ void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
 	}
 }
 
-Position GameObject::getPos() { return pos;  }
-
 void GameObject::render() {
 	// Set render draw color
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
@@ -77,13 +75,12 @@ void GameObject::render() {
 	int jWidth, iHeight;
 	jWidth = iHeight = 5;
 
-
 	// Render the "pixels"
 	for (int i = 0; i < iHeight; i++) {
 		for (int j = 0; j < jWidth; j++) {
 			// render any place there is non-zero
 			if (pixelVec[i][j] != 0) {
-				// render based on position translation
+				// translate matrix coordinate to x,y coordinate in pixels
 				rect.x = pos.x + (unit * j);
 				rect.y = pos.y + (unit * i);
 				SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
@@ -93,16 +90,6 @@ void GameObject::render() {
 			}
 		}
 	}
-}
-
-/* detectCollision()
- * 
- *
- * 
- */
-bool detectCollision(GameObject piece, GameObject field) {
-	bool res = false;
-	return res;
 }
 
 /*			PRIVATE METHODS			*/

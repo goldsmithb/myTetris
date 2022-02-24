@@ -14,6 +14,9 @@ GameField::GameField(SDL_Renderer* ren, Color c, int unitSize, int winW, int win
     fieldRect.y = pos.y;
     fieldRect.w = FIELD_WIDTH * unit;
     fieldRect.h = FIELD_HEIGHT * unit;
+
+    std::cout << " fieldMatrix rows : " << pixelVec.size() << std::endl;
+    std::cout << " fieldMatrix collumns : " << pixelVec.at(0).size() << std::endl;
 }
 
 void GameField::render() {
