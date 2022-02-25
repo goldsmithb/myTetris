@@ -1,5 +1,6 @@
 #include "Game.h"
 
+int Game_gUnit = 15; // declared in GameObject.h // TODO
 
 Game::Game()
     : windowTitle("myTetris"), windowXPos(SDL_WINDOWPOS_CENTERED), 
@@ -44,10 +45,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load all the gameObjects!
         // TODO : pieces queue
 
-        gameField = new GameField(renderer, lightBlue, gUnit, width, height);
+        gameField = new GameField(renderer, lightBlue, Game_gUnit, width, height);
 
         // Make the first piece
-        currentPiece = new GamePiece(renderer, gUnit, Piece::I, FIELD_WIDTH, gameField->accessPos());
+        currentPiece = new GamePiece(renderer, Game_gUnit, Piece::I, FIELD_WIDTH, gameField->accessPos());
         
     } else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
@@ -99,58 +100,6 @@ void Game::handleEvents() {
     }
 }
 
-// todo if returns true: move the piece up one unit, let the field absorb it :) yum
-// returns: -1 if no collision
-//          0 if collided with the field's floor
-//          1 if collided with a block
-int detectCollision(GameObject piece, GameObject field) {
-    std::vector<std::vector<char>> pieceMatrix, fieldMatrix;
-    pieceMatrix = piece.accessPixelVec(), fieldMatrix = field.accessPixelVec();
-    int fieldHeight = field.getHeight();
-    int fieldWidth = field.getWidth();
-
-    // store piece's pixel pos relative to field's local origin
-    Position fieldGXY = { field.accessPos().x, field.accessPos().y };
-    Position pieceXY = { piece.accessPos().x, piece.accessPos().y };
-    pieceXY.x -= fieldGXY.x;
-    pieceXY.y -= fieldGXY.y;
-    // now convert to block coordinates
-    pieceXY.x /= gUnit;
-    pieceXY.y /= gUnit;
-
-    // QUESTION  is this 4x nested for loop needed? So uggo
-    // TODO check from top to bottom
-    // check for collisions
-    for (int i = 0; i < fieldHeight; i++) {
-        for (int j = 0; j < fieldWidth; j++) {
-            if (fieldMatrix[i][j] != 0 || 
-                i == (fieldHeight - 1))    // always land on bottom row
-            {
-                // check for collision
-                for (int y = 0; y < 5; y++) {
-                    for (int x = 0; x < 5; x++) {
-                        if (pieceMatrix[y][x] != 0) {
-                            if (i == (pieceXY.y + y) && 
-                                j == (pieceXY.x + x)) 
-                            {
-                                // did we collide, or just hit the bottom?
-                                if (fieldMatrix[i][j] == 0) {
-                                    return 0;
-                                } else {
-                                    std::cout << "collision detected!!" << std::endl; // ERROR
-                                    return 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return -1;
-}
-
 void Game::update() { 
 
     // update game variables
@@ -158,7 +107,23 @@ void Game::update() {
     currentPiece->update();
 
     // detect whether a block has landed
-    
+    int collision = detectCollision(*currentPiece, *gameField);
+    switch (collision) {
+    case 1 :
+        // bumb the piece back
+        currentPiece->move(0, -1);
+    case 0:
+        // absorb the piece into field
+        gameField->absorb(*currentPiece);
+        // choose new currentPiece
+        //delete currentPiece;
+        // TODO pop the queue!
+        currentPiece = new GamePiece(renderer, Game_gUnit, Piece::I, FIELD_WIDTH, gameField->accessPos());
+    case -1 :
+    default :
+        break;
+    }
+
 
 }
 
@@ -182,4 +147,60 @@ void Game::clean() {
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
     std::cout << "Game cleaned." << std::endl;
+}
+
+
+/*          FUNCTIONS           */
+// todo if returns true: move the piece up one unit, let the field absorb it :) yum
+// returns: -1 if no collision
+//          0 if collided with the field's floor
+//          1 if collided with a block
+int detectCollision(GameObject piece, GameObject field) {
+    std::vector<std::vector<char>> pieceMatrix, fieldMatrix;
+    pieceMatrix = piece.accessPixelVec(), fieldMatrix = field.accessPixelVec();
+    int fieldHeight = field.getHeight();
+    int fieldWidth = field.getWidth();
+
+    // store piece's pixel pos relative to field's local origin
+    Position fieldGXY = { field.accessPos().x, field.accessPos().y };
+    Position pieceXY = { piece.accessPos().x, piece.accessPos().y };
+    // TODO : NOTE THAT THIS POS IS IN UNITS!
+
+    pieceXY = translateLocalToGlobal(pieceXY, fieldGXY);
+
+    // QUESTION  is this 4x nested for loop needed? So uggo
+    // TODO check from top to bottom
+    // check for collisions
+    for (int i = 0; i < fieldHeight; i++) {
+        for (int j = 0; j < fieldWidth; j++) {
+            if (fieldMatrix[i][j] != 0 ||
+                i == (fieldHeight - 1))    // always land on bottom row
+            {
+                // check for collision
+                for (int y = 0; y < 5; y++) {
+                    for (int x = 0; x < 5; x++) {
+                        if (pieceMatrix[y][x] != 0) {
+                            //std::cout << "Possible collision " << std::endl;
+                            //std::cout << "i: " << i << "\nj: " << j << "\nlocal y: " << (pieceXY.y )<< "\nlocal x: " << (pieceXY.x) << std::endl;
+
+                            if (i == (pieceXY.y + y) &&
+                                j == (pieceXY.x + x))
+                            {
+                                // did we collide, or just hit the bottom?
+                                if (fieldMatrix[i][j] == 0) {
+                                    return 0;
+                                }
+                                else {
+                                    std::cout << "collision detected!!" << std::endl; // ERROR
+                                    return 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return -1;
 }

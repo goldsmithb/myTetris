@@ -26,3 +26,21 @@ void GameField::render() {
 
     GameObject::render();
 }
+
+void GameField::absorb(GameObject piece) {
+    std::vector<std::vector<char>> pieceMatrix;
+    Position pieceXY = { piece.accessPos().x, piece.accessPos().y };
+
+    pieceXY = translateLocalToGlobal(pieceXY, this->pos);
+    pieceMatrix = piece.accessPixelVec();
+
+    // iterate through the piece pixelVec
+    for (int i = 0; i < piece.getHeight(); i++) {
+        for (int j = 0; j < piece.getWidth(); j++) {
+            // record a value where needed
+            if (pieceMatrix[i][j]) {
+                this->pixelVec[pieceXY.y + i][pieceXY.x + j] = 1;
+            }
+        }
+    }
+}

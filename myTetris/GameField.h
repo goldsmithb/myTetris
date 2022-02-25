@@ -16,6 +16,9 @@ public:
 
 	void render();
 
+	/* copies a piece into a gameField */
+	void absorb(GameObject piece);
+
 private:
 	SDL_Rect fieldRect;
 	Color bgColor;

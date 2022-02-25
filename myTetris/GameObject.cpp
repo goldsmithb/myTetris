@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 /* TODO: 
+*  - FIX "GLOBAL" VARIABLE gUnit
  * - subclasses for pieces and the game field (inheret from GameObject)?
  *		- because it simplifies initializing
  *		- because pieces rotate but the field doesn't have too
@@ -15,7 +16,6 @@
  *
  *
  */
-
 
 /*			PUBLIC METHODS			*/
 // TODO this seems to be needed in order to have a subclass. Is there a more elegant workaround?
@@ -92,12 +92,22 @@ void GameObject::render() {
 	}
 }
 
-/*			PRIVATE METHODS			*/
 
-Position GameObject::translateLocalGlobal(int x, int y) {
-	Position res;
-	res.x = pos.x + x;
-	res.y = pos.y + y;
+/*			FUNCTIONS			*/
+// translates the global coordinates into local coordinates 
+// based around a local origin, localOG.
+// Because this is only ever used for determining matrix positions,
+//	return Position tuple in block units rather than pixels		!!!!!!!!!!
+// TODO this is probably bad because Position::Position has up to 
+// now only stored pixel coords...
+Position translateLocalToGlobal(Position global, Position localOG) {
+	// perform translation
+	global.x -= localOG.x;
+	global.y -= localOG.y;
 
-	return res;
+	// now convert to block coordinates
+	global.x /= 15;			// TODO gUnit
+	global.y /= 15;			// TODO gUnit
+
+	return global;
 }

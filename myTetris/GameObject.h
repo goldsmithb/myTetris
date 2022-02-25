@@ -5,6 +5,11 @@
 #include <SDL.h>
 #include <cmath>
 
+
+/*      GLOBAL VARIABLES		*/
+//extern int gUnit;				// declared in GameObject.cpp, externed to Game.cpp
+
+
 /*      CONSTANTS		*/
 const int FIELD_WIDTH = 15;			// gameField width in units
 const int FIELD_HEIGHT = 28;		// gameField height in units
@@ -50,6 +55,10 @@ typedef struct Color {
  */
 class GameObject {
 public:
+
+	// TODO this is a work around
+	int gUnit = 15;
+
 	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
 	// TODO pass SDL_Renderer by reference !! in non C style :)
@@ -94,16 +103,16 @@ protected:
 
 	// renderer needed for rendering. Will pass in game renderer by reference
 	SDL_Renderer* renderer;
-	
+
 	unsigned char unit; // for storing the gUnit value // QUESTION this seems inelegant, to copy it
-	
+
 	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
 
-private:
-	int width, height; // TODO are these used?
+	int width, height; // dimensions of the pixelVec matrix
 
-	// translate the local array coordinates to the global window coordinates
-	Position translateLocalGlobal(int x, int y);
-	// TODO: verbose and unecessary? right now, it would be more lines of code 
-	// to call this function
+private:
 };
+
+
+// returns in UNITS!
+Position translateLocalToGlobal(Position global, Position localOG);
