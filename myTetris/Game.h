@@ -7,6 +7,8 @@
 #include "GamePiece.h"
 #include "GameField.h"
 
+/*      ENUMS           */
+enum Side { Left, Right };
 
 /*		CONSTANTS		*/
 const int gFPS = 60;
@@ -47,7 +49,8 @@ public:
     // checks if the game is currently running
     bool running() { return isRunning; }
 
- 
+    bool detectBlockage(enum Side side);
+
 
     // TODO : add these properties:
     // 

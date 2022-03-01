@@ -56,45 +56,32 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     }
 }
 
-// TODO document
-// Process key press event and update current surface respectively
-void Game::processKeyEvent(SDL_Event event) {
+bool Game::detectBlockage(enum Side side) {
     Position possible;
     int pieceVecSize = currentPiece->getHeight();
     int righttWallIndex = gameField->getWidth() - 1;
     std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
     std::vector<std::vector<char>> gameFieldVec = gameField->accessPixelVec();
 
-    switch (event.key.keysym.sym) {
-    case SDLK_UP:
-        currentPiece->move(0, -1);
-        break;
-    case SDLK_DOWN:
-        currentPiece->move(0, 1);
-        break;
-    case SDLK_LEFT:
-        // TODO THIS DOES NOT WORK!!-- need to check for each block in the currPiece
-        possible = translateLocalToGlobal(currentPiece->accessPos(), 
-                                          gameField->accessPos());
+    switch (side) {
+    case Left :
+        possible = translateLocalToGlobal(currentPiece->accessPos(),
+            gameField->accessPos());
         // Don't move if there is a fallen block to the left of any of the currentPiece blocks
         // for each block in pieceVec, check if there is a block in gameField to the left
         // or if we've hit the side of the gameField
         for (int y = 0; y < pieceVecSize; y++) {
             for (int x = 0; x < pieceVecSize; x++) {
                 if (pieceVec[y][x]) {
-                    if (((possible.x + x - 1) < 0) || 
+                    if (((possible.x + x - 1) < 0) ||
                         gameFieldVec[possible.y + y][possible.x + x - 1] == 1) {
                         std::cout << "Blocked on the left!" << std::endl;
-                        return;
+                        return true;
                     }
                 }
             }
         }
-        // No blocking detected
-        currentPiece->move(-1, 0);
-        break;
-    case SDLK_RIGHT:
-        // TODO THIS DOES NOT WORK!!-- need to check for each block in the currPiece
+    case Right :
         possible = translateLocalToGlobal(currentPiece->accessPos(),
             gameField->accessPos());
         // Don't move if there is a fallen block to the left of any of the currentPiece blocks
@@ -105,13 +92,31 @@ void Game::processKeyEvent(SDL_Event event) {
                     if (((possible.x + x + 1) > righttWallIndex) ||
                         gameFieldVec[possible.y + y][possible.x + x + 1] == 1) {
                         std::cout << "Blocked on the right!" << std::endl;
-                        return;
+                        return true;
                     }
                 }
             }
         }
-        // No blocking detected
-        currentPiece->move(1, 0);
+    }
+    
+    return false;
+}
+
+void Game::processKeyEvent(SDL_Event event) {
+    switch (event.key.keysym.sym) {
+    case SDLK_UP:
+        currentPiece->move(0, -1);
+        break;
+    case SDLK_DOWN:
+        currentPiece->move(0, 1);
+        break;
+    case SDLK_LEFT:
+        if (detectBlockage(Left) == false)
+            currentPiece->move(-1, 0);
+        break;
+    case SDLK_RIGHT:
+        if (detectBlockage(Right) == false)
+            currentPiece->move(1, 0);
         break;
     case SDLK_x:
     case SDLK_z:
