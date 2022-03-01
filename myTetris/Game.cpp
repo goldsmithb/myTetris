@@ -81,6 +81,7 @@ bool Game::detectBlockage(enum Side side) {
                 }
             }
         }
+        break;
     case Right :
         possible = translateLocalToGlobal(currentPiece->accessPos(),
             gameField->accessPos());
@@ -97,6 +98,9 @@ bool Game::detectBlockage(enum Side side) {
                 }
             }
         }
+        break;
+    default :
+        break;
     }
     
     return false;
