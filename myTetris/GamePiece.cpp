@@ -249,13 +249,9 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	// create the pixelVec for appropriate PieceType at default rotation
 	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
 
-	std::cout << "Created piece!" << std::endl;							// ERROR
-	printGameObjectVector(pixelVec);									// ERROR
-	std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl; // ERROR
-}
-
-void GamePiece::printRendererPtr() {
-	std::cout << "print renderer ptr: renderer pts to " << int(renderer) << std::endl;		// ERROR
+	//std::cout << "Created piece!" << std::endl;						// ERROR
+	//printGameObjectVector(pixelVec);									// ERROR
+	//std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl; // ERROR
 }
 
 void GamePiece::update() {

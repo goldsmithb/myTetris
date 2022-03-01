@@ -70,7 +70,9 @@ public:
 	// This means changing the rotation value and the pixelArray ptr
 	void rotate(SDL_Event event);
 
-	void printRendererPtr();
+	void printRendererPtr() {
+		std::cout << "print renderer ptr: renderer pts to " << int(renderer) << std::endl;
+	}
 
 private:
 	/*      PROPERTIES  */

@@ -84,9 +84,11 @@ public:
 
 	void printGameObjectVector(std::vector<std::vector<char>> array);
 
+	void printGameObjectVector();
+
 	Position& accessPos() { return pos; }
 
-	std::vector<std::vector<char>> accessPixelVec() { return pixelVec; }
+	std::vector<std::vector<char>>& accessPixelVec() { return pixelVec; }
 
 	int getHeight() { return height; }
 
@@ -108,7 +110,7 @@ protected:
 
 	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
 
-	int width, height; // dimensions of the pixelVec matrix
+	int width, height; // dimensions of the pixelVec matrix (aka in units)
 
 private:
 };

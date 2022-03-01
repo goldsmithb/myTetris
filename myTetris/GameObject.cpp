@@ -2,16 +2,11 @@
 
 /* TODO: 
 *  - FIX "GLOBAL" VARIABLE gUnit
- * - subclasses for pieces and the game field (inheret from GameObject)?
- *		- because it simplifies initializing
- *		- because pieces rotate but the field doesn't have too
- *		- just need to make sure the collision detection (when written)
- *		  works for a gameObject of any size (should be okay)
  * - header just for the grand piece array
- *		- Solution?: solve by subclassing
+ *		- QUESTION this is not allowed impossible - why?
+ *			- Things MUST be defined in a cpp file ? can only be declared in a header?
  * - Collision detection
- * - gameField Subclass
- *		- renderBackGround()
+ *		- prevent colliding while moving Left and right against blocks
  * - Pieces Queue
  *
  *
@@ -58,9 +53,21 @@ void GameObject::move(int dx, int dy) {
 void GameObject::move(Position newXY) { pos = newXY; }
 
 // TODO document - for debugging purposes
+//			But still, shouldn't need an input vector as a class method of GameObject
 void GameObject::printGameObjectVector(std::vector<std::vector<char>> array) {
 	std::cout << "PRINTING VECTOR:" << '\n';
 	for (std::vector<char> vec : array) {
+		for (char c : vec) {
+			std::cout << int(c) << ", ";
+		}
+		std::cout << std::endl;
+	}
+}
+
+// Overridden version
+void GameObject::printGameObjectVector() {
+	std::cout << "PRINTING VECTOR (overridden):" << '\n';
+	for (std::vector<char> vec : pixelVec) {
 		for (char c : vec) {
 			std::cout << int(c) << ", ";
 		}
@@ -73,7 +80,8 @@ void GameObject::render() {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
 
 	int jWidth, iHeight;
-	jWidth = iHeight = 5;
+	jWidth = this->width;
+	iHeight = this->height;
 
 	// Render the "pixels"
 	for (int i = 0; i < iHeight; i++) {

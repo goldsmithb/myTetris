@@ -59,6 +59,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 // TODO document
 // Process key press event and update current surface respectively
 void Game::processKeyEvent(SDL_Event event) {
+    Position possible;
+    int pieceVecSize = currentPiece->getHeight();
+    int righttWallIndex = gameField->getWidth() - 1;
+    std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
+    std::vector<std::vector<char>> gameFieldVec = gameField->accessPixelVec();
 
     switch (event.key.keysym.sym) {
     case SDLK_UP:
@@ -68,9 +73,44 @@ void Game::processKeyEvent(SDL_Event event) {
         currentPiece->move(0, 1);
         break;
     case SDLK_LEFT:
+        // TODO THIS DOES NOT WORK!!-- need to check for each block in the currPiece
+        possible = translateLocalToGlobal(currentPiece->accessPos(), 
+                                          gameField->accessPos());
+        // Don't move if there is a fallen block to the left of any of the currentPiece blocks
+        // for each block in pieceVec, check if there is a block in gameField to the left
+        // or if we've hit the side of the gameField
+        for (int y = 0; y < pieceVecSize; y++) {
+            for (int x = 0; x < pieceVecSize; x++) {
+                if (pieceVec[y][x]) {
+                    if (((possible.x + x - 1) < 0) || 
+                        gameFieldVec[possible.y + y][possible.x + x - 1] == 1) {
+                        std::cout << "Blocked on the left!" << std::endl;
+                        return;
+                    }
+                }
+            }
+        }
+        // No blocking detected
         currentPiece->move(-1, 0);
         break;
     case SDLK_RIGHT:
+        // TODO THIS DOES NOT WORK!!-- need to check for each block in the currPiece
+        possible = translateLocalToGlobal(currentPiece->accessPos(),
+            gameField->accessPos());
+        // Don't move if there is a fallen block to the left of any of the currentPiece blocks
+        // for each block in pieceVec, check if there is a block in gameField to the left
+        for (int y = 0; y < pieceVecSize; y++) {
+            for (int x = 0; x < pieceVecSize; x++) {
+                if (pieceVec[y][x]) {
+                    if (((possible.x + x + 1) > righttWallIndex) ||
+                        gameFieldVec[possible.y + y][possible.x + x + 1] == 1) {
+                        std::cout << "Blocked on the right!" << std::endl;
+                        return;
+                    }
+                }
+            }
+        }
+        // No blocking detected
         currentPiece->move(1, 0);
         break;
     case SDLK_x:
@@ -118,7 +158,7 @@ void Game::update() {
         // choose new currentPiece
         //delete currentPiece;
         // TODO pop the queue!
-        currentPiece = new GamePiece(renderer, Game_gUnit, Piece::I, FIELD_WIDTH, gameField->accessPos());
+        currentPiece = new GamePiece(renderer, Game_gUnit, Piece::NReverse, FIELD_WIDTH, gameField->accessPos());
     case -1 :
     default :
         break;
@@ -151,7 +191,9 @@ void Game::clean() {
 
 
 /*          FUNCTIONS           */
-// todo if returns true: move the piece up one unit, let the field absorb it :) yum
+
+// TODO : allow things to land by moving in from the left
+// TODO if returns true: move the piece up one unit, let the field absorb it :) yum
 // returns: -1 if no collision
 //          0 if collided with the field's floor
 //          1 if collided with a block
@@ -160,16 +202,17 @@ int detectCollision(GameObject piece, GameObject field) {
     pieceMatrix = piece.accessPixelVec(), fieldMatrix = field.accessPixelVec();
     int fieldHeight = field.getHeight();
     int fieldWidth = field.getWidth();
+    int pieceVecSize = piece.getHeight();
 
     // store piece's pixel pos relative to field's local origin
     Position fieldGXY = { field.accessPos().x, field.accessPos().y };
-    Position pieceXY = { piece.accessPos().x, piece.accessPos().y };
+    Position pieceLXY = { piece.accessPos().x, piece.accessPos().y };
     // TODO : NOTE THAT THIS POS IS IN UNITS!
 
-    pieceXY = translateLocalToGlobal(pieceXY, fieldGXY);
+    pieceLXY = translateLocalToGlobal(pieceLXY, fieldGXY);
 
     // QUESTION  is this 4x nested for loop needed? So uggo
-    // TODO check from top to bottom
+    // TODO check from top to bottom - optimize
     // check for collisions
     for (int i = 0; i < fieldHeight; i++) {
         for (int j = 0; j < fieldWidth; j++) {
@@ -177,15 +220,15 @@ int detectCollision(GameObject piece, GameObject field) {
                 i == (fieldHeight - 1))    // always land on bottom row
             {
                 // check for collision
-                for (int y = 0; y < 5; y++) {
-                    for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < pieceVecSize; y++) {
+                    for (int x = 0; x < pieceVecSize; x++) {
                         if (pieceMatrix[y][x] != 0) {
-                            //std::cout << "Possible collision " << std::endl;
-                            //std::cout << "i: " << i << "\nj: " << j << "\nlocal y: " << (pieceXY.y )<< "\nlocal x: " << (pieceXY.x) << std::endl;
-
-                            if (i == (pieceXY.y + y) &&
-                                j == (pieceXY.x + x))
+                            if (i == (pieceLXY.y + y) &&
+                                j == (pieceLXY.x + x))
                             {
+                                std::cout << "possible collision" << std::endl;
+                                std::cout << "i: " << i << "\tj: " << j << "\nlocal y: " << (pieceLXY.y) << "\tlocal x: " << (pieceLXY.x) << std::endl;
+                                // TODO : this fn might not be doing what I want exactly...
                                 // did we collide, or just hit the bottom?
                                 if (fieldMatrix[i][j] == 0) {
                                     return 0;

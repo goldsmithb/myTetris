@@ -20,10 +20,12 @@ GameField::GameField(SDL_Renderer* ren, Color c, int unitSize, int winW, int win
 }
 
 void GameField::render() {
+    // Draw area of game field
     SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, 0xff);
 
     SDL_RenderFillRect(renderer, &fieldRect);
 
+    // render fallen blocks
     GameObject::render();
 }
 
@@ -39,8 +41,11 @@ void GameField::absorb(GameObject piece) {
         for (int j = 0; j < piece.getWidth(); j++) {
             // record a value where needed
             if (pieceMatrix[i][j]) {
+                //std::cout << "copying a block into the field at: [" << i<<"]["<<j<<"]" << std::endl; // ERROR
+                //std::cout << "                             into: [" << (pieceXY.y + i) << "][" << (pieceXY.x + j) << "]" << std::endl; // ERROR
                 this->pixelVec[pieceXY.y + i][pieceXY.x + j] = 1;
             }
         }
     }
+    //printGameObjectVector();        // ERROR
 }
