@@ -1,5 +1,5 @@
 # myTetris
-My own Tetris from scratch written in c++. Just a fun way to learn the basics of game dev, the c++ language, and SDL2.
+Tetris clone from scratch written in c++. Just a fun way to learn the basics of game dev, the c++ language, and SDL2.
 
 ## Base Game
 The basic game is nothing special: just marathon tetris.
