@@ -106,9 +106,52 @@ bool Game::detectBlockage(enum Side side) {
     return false;
 }
 
+Position Game::quickFall() {
+    // approach: find the highest block in gameField that is in the 'shadow'
+    // of the currentPiece (i.e. in the collumn underneath the piece);
+    int pieceVecSize = currentPiece->getWidth();
+    Position piecePos = translateLocalToGlobal(currentPiece->accessPos(), gameField->accessPos());
+    Position returnVal = { 0,0 };
+    std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
+    std::vector<std::vector<char>> gameFieldVec = gameField->accessPixelVec();
+
+
+    // from bottom-up, check the gameField for the highest block in the
+    // 5-unit column underneath the current piece
+
+    // determine shadow width
+    int shadowX, shadowEnd;
+    // set to furthest left
+    shadowX = piecePos.x + pieceVecSize;
+    // set to furthest right
+    shadowEnd = piecePos.x;
+    for (int x = 0; x < pieceVecSize; x++) {
+        for (int y = 0; y < pieceVecSize; y++) {
+            // if there is a block there and it is the furthest right yet, set as the start of the shadow
+            if (pieceVec[y][x] != 0) {
+                // must add piecePos.x because we need to translate to the 
+                // gameField local orientation -- that's what the shadow is in
+                if (piecePos.x + x < shadowX) {
+                    shadowX = piecePos.x + x;
+                }
+                if (piecePos.x + x > shadowEnd) {
+                    shadowEnd = piecePos.x + x;
+                }
+            }
+        }
+    }
+
+    std::cout << "shadow span: begin at " << shadowX << " -- " << shadowEnd << std::endl; // ERROR
+   
+    return returnVal;
+
+}
+
 void Game::processKeyEvent(SDL_Event event) {
     switch (event.key.keysym.sym) {
     case SDLK_UP:
+        // TODO : this should fall as much as possible...
+        quickFall();
         currentPiece->move(0, -1);
         break;
     case SDLK_DOWN:

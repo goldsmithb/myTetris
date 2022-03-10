@@ -8,6 +8,8 @@
 #include "GameField.h"
 
 /*      ENUMS           */
+// A simple 2-member enum to encode which side of
+// the current block to detectBlockage on
 enum Side { Left, Right };
 
 /*		CONSTANTS		*/
@@ -49,14 +51,11 @@ public:
     // checks if the game is currently running
     bool running() { return isRunning; }
 
+    // return the position a piece should warp to when
+    // player presses the up-key
     bool detectBlockage(enum Side side);
 
-
-    // TODO : add these properties:
-    // 
-    // GameObject currentBlock;
-    // std::vector<GameObject> blockQueue
-    // GameObject field
+    Position quickFall();
 
 private:
     const char* windowTitle;        // Title for the window
