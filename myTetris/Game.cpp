@@ -6,7 +6,7 @@ Game::Game()
     : windowTitle("myTetris"), windowXPos(SDL_WINDOWPOS_CENTERED), 
       windowYPos(SDL_WINDOWPOS_CENTERED), winW(gWidth), winH(gHeight), 
       fullscreen(false), isRunning(false), window(nullptr), renderer(nullptr),
-      currentPiece(nullptr), piecesQueue(nullptr), gameField(nullptr)
+      currentPiece(nullptr), gameField(nullptr)
 {
     init(windowTitle, windowXPos, windowYPos, winW, winH, fullscreen);
 }
@@ -45,15 +45,37 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load all the gameObjects!
         // TODO : pieces queue
 
+        int x = 10;
+        while (x-- > 0) {
+            std::cout << "PRNGPRNGPRNG : " << prng(mt) << std::endl;
+        }
+
         gameField = new GameField(renderer, lightBlue, Game_gUnit, width, height);
 
+        // populate the queue
+        for (int i = 0; i < 5; i++) {
+            GamePiece* newPiece = new GamePiece(renderer, Game_gUnit, Piece(prng(mt)), FIELD_WIDTH, gameField->accessPos());
+            piecesQueue.push(newPiece);
+        }
+
         // Make the first piece
-        currentPiece = new GamePiece(renderer, Game_gUnit, Piece::I, FIELD_WIDTH, gameField->accessPos());
-        
+        currentPiece = popPiece(); 
+
     } else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
         isRunning = false;
     }
+}
+
+GamePiece* Game::popPiece() {
+    GamePiece* ret = piecesQueue.front();
+    piecesQueue.pop();
+
+    GamePiece* newPiece = new GamePiece(renderer, Game_gUnit, Piece(prng(mt)), FIELD_WIDTH, gameField->accessPos());
+
+    piecesQueue.push(newPiece);
+
+    return ret;
 }
 
 bool Game::detectBlockage(enum Side side) {
@@ -226,7 +248,7 @@ void Game::update() {
         // choose new currentPiece
         //delete currentPiece;
         // TODO pop the queue!
-        currentPiece = new GamePiece(renderer, Game_gUnit, Piece::NReverse, FIELD_WIDTH, gameField->accessPos());
+        currentPiece = popPiece();
     case -1 :
     default :
         break;

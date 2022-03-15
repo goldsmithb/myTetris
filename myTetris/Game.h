@@ -1,6 +1,9 @@
 #pragma once
 #include <SDL.h>
 #include <iostream>
+#include <queue>
+#include <random>
+#include <chrono>
 #include <SDL_image.h>
 #include "TextureManager.h"
 #include "GameObject.h"
@@ -55,6 +58,10 @@ public:
     // player presses the up-key
     bool detectBlockage(enum Side side);
 
+    // wrapper for popping out a current piece
+    // and pushing a new random piece onto the piecesQueue
+    GamePiece* popPiece();
+
     Position quickFall();
 
 private:
@@ -71,11 +78,17 @@ private:
 
     SDL_Renderer* renderer;         // Global renderer
 
-    GamePiece* currentPiece;         // Current Piece
+    GamePiece* currentPiece;        // Current Piece
 
-    GamePiece** piecesQueue;         // Pieces Queue
+    std::queue<GamePiece*> piecesQueue; // Pieces Queue
 
     GameField* gameField;           // Game Field
+
+    std::mt19937 mt{ static_cast<unsigned int>(
+            std::chrono::steady_clock::now().time_since_epoch().count()
+            ) };                    // mersenne twister engine seeded with curent time
+
+    std::uniform_int_distribution<> prng{ 0, 6}; // prng with uniform dist. for choosing piece type
 };
 
 /*          FUNCTIONS           */
