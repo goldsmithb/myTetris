@@ -8,7 +8,7 @@
  * - Collision detection
  *		- prevent colliding while moving Left and right against blocks
  * - Pieces Queue
- *
+ * - Don't allow piece to rotate out of bounds--have to adjust their position
  *
  */
 

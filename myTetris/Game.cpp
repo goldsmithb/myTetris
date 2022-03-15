@@ -106,6 +106,7 @@ bool Game::detectBlockage(enum Side side) {
     return false;
 }
 
+// NOTICE: Abandoned lol but the code could come in handy later
 Position Game::quickFall() {
     // approach: find the highest block in gameField that is in the 'shadow'
     // of the currentPiece (i.e. in the collumn underneath the piece);
@@ -113,8 +114,6 @@ Position Game::quickFall() {
     Position piecePos = translateLocalToGlobal(currentPiece->accessPos(), gameField->accessPos());
     Position returnVal = { 0,0 };
     std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
-    std::vector<std::vector<char>> gameFieldVec = gameField->accessPixelVec();
-
 
     // from bottom-up, check the gameField for the highest block in the
     // 5-unit column underneath the current piece
@@ -143,6 +142,22 @@ Position Game::quickFall() {
 
     std::cout << "shadow span: begin at " << shadowX << " -- " << shadowEnd << std::endl; // ERROR
    
+    // check the gameField from bottom up to find the top block in the column
+    int fieldVecW = gameField->getWidth();
+    int fieldVecH = gameField->getHeight();
+    int topY = fieldVecH + 1;               // Set as out of bounds value
+    std::vector<std::vector<char>> gameFieldVec = gameField->accessPixelVec();
+
+    for (int x = shadowX; x < shadowEnd; x++) {
+        for (int y = (fieldVecH - 1); y >= 0; y--) {
+            if (gameFieldVec[y][x] != 0 && y < topY) {
+                topY = y;
+            }
+        }
+    }
+
+    std::cout << "topY detected as: " << topY << std::endl;     // ERROR
+
     return returnVal;
 
 }
@@ -150,9 +165,10 @@ Position Game::quickFall() {
 void Game::processKeyEvent(SDL_Event event) {
     switch (event.key.keysym.sym) {
     case SDLK_UP:
-        // TODO : this should fall as much as possible...
-        quickFall();
-        currentPiece->move(0, -1);
+        // Fall until collision detected
+        while (detectCollision(*currentPiece, *gameField) == -1) {
+            currentPiece->move(0, 1);
+        }
         break;
     case SDLK_DOWN:
         currentPiece->move(0, 1);
