@@ -230,6 +230,37 @@ std::vector<std::vector<std::vector<std::vector<char>>>> piecesGuide =
 	}
 };
 
+Color setColor(Piece pieceType) {
+	Color ret = { 0, 0 , 0 };
+	
+	switch (pieceType) {
+	case Piece::I:
+		ret = { 52, 186, 235 };
+		break;
+	case Piece::L:
+		ret = { 237, 234, 21 };
+		break;
+	case Piece::LReverse:
+		ret = { 93, 21, 237 };
+		break;
+	case Piece::N:
+		ret = { 223, 21, 237 };
+		break;
+	case Piece::NReverse:
+		ret = { 136, 237, 21 };
+		break;
+	case Piece::Psi:
+		ret = { 237, 136, 21 };
+		break;
+	case Piece::Square:
+	default:
+		ret = { 235, 52, 52 };
+		break;
+
+	}
+
+	return ret;
+}
 
 GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFWidth, Position GFXY)
 	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT, unitSize), 
@@ -244,7 +275,8 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	pos.y = GFXY.y;
 	pos.x += unit * ((GFWidth - PIECE_WIDTH_HEIGHT) / 2);
 
-	color = { 0xff, 0, 0 };
+	// set color based on piece type
+	color = setColor(pieceType);
 
 	// create the pixelVec for appropriate PieceType at default rotation
 	pixelVec = piecesGuide.at(int(pieceType)).at(int(rotation));
@@ -253,8 +285,6 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	//printGameObjectVector(pixelVec);									// ERROR
 	//std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl; // ERROR
 }
-
-
 
 void GamePiece::update() {
 	// All blocks fall at base speed 2 units per second
