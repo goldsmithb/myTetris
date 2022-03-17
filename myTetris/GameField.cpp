@@ -29,6 +29,23 @@ void GameField::render() {
     GameObject::render();
 }
 
+void GameField::update() {
+    for (int y = 0; y < this->height; y++) {
+        int count = 0;
+        for (int x = 0; x < this->width; x++) {
+            if (pixelVec[y][x]) {
+                count++;
+            }
+        }
+        // if line cleared, shift everything down
+        if (count == this->width) {
+            pixelVec.erase(pixelVec.begin() + y);
+            pixelVec.insert(pixelVec.begin(), std::vector<char>(this->width, 0));
+        }
+    }
+}
+
+
 void GameField::absorb(GameObject piece) {
     std::vector<std::vector<char>> pieceMatrix;
     Position pieceXY = { piece.accessPos().x, piece.accessPos().y };

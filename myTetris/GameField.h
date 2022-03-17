@@ -15,6 +15,8 @@ public:
 	GameField(SDL_Renderer* ren, Color c, int unitSize, int winW, int winH);
 
 	void render();
+	
+	void update();
 
 	/* copies a piece into a gameField */
 	void absorb(GameObject piece);

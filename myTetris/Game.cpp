@@ -143,6 +143,8 @@ void Game::update() {
         break;
     }
 
+    gameField->update();
+
 
 }
 
