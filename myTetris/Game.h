@@ -40,7 +40,7 @@ public:
 
 
     Game();
-    ~Game();
+    //~Game();
 
     // initialize SDL, the window, the renderer
     void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
