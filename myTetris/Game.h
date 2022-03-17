@@ -66,6 +66,7 @@ public:
     // and pushing a new random piece onto the piecesQueue
     GamePiece* popPiece();
 
+    // method abandoned but keeping code in case useful
     Position quickFall();
 
 private:

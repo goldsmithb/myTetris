@@ -11,10 +11,6 @@ Game::Game()
     init(windowTitle, windowXPos, windowYPos, winW, winH, fullscreen);
 }
 
-Game::~Game() {
-
-}
-
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
     int flags = 0;
@@ -67,15 +63,109 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     }
 }
 
-GamePiece* Game::popPiece() {
-    GamePiece* ret = piecesQueue.front();
-    piecesQueue.pop();
+void Game::processKeyEvent(SDL_Event event) {
+    bool rotationFlag = false;
 
-    GamePiece* newPiece = new GamePiece(renderer, Game_gUnit, Piece(prng(mt)), FIELD_WIDTH, gameField->accessPos());
+    switch (event.key.keysym.sym) {
+    case SDLK_UP:
+        // Fall until collision detected
+        while (detectCollision(*currentPiece, *gameField) == -1) {
+            currentPiece->move(0, 1);
+        }
+        break;
+    case SDLK_DOWN:
+        currentPiece->move(0, 1);
+        break;
+    case SDLK_LEFT:
+        if (detectBlockage(Left) == false)
+            currentPiece->move(-1, 0);
+        break;
+    case SDLK_RIGHT:
+        if (detectBlockage(Right) == false)
+            currentPiece->move(1, 0);
+        break;
+    case SDLK_x:
+    case SDLK_z:
+        currentPiece->rotate(event);
+        rotationFlag = true;
+        break;
+    default:
+        break;
+    }
 
-    piecesQueue.push(newPiece);
+    if (rotationFlag) {
+        bumpRotation();
+    }
+    
+}
 
-    return ret;
+// TODO document
+// Process io events
+// Right now, just quit and key events
+void Game::handleEvents() {
+    SDL_Event event;
+    SDL_PollEvent(&event);
+
+    switch (event.type) {
+    case SDL_QUIT:
+        isRunning = false;
+        break;
+    case SDL_KEYDOWN:
+        processKeyEvent(event);
+    default:
+        break;
+    }
+}
+
+void Game::update() { 
+
+    // update game variables
+
+    currentPiece->update();
+
+    // detect whether a block has landed
+    int collision = detectCollision(*currentPiece, *gameField);
+    switch (collision) {
+    case 1 :
+        // bumb the piece back
+        currentPiece->move(0, -1);
+    case 0:
+        // absorb the piece into field
+        gameField->absorb(*currentPiece);
+        // delete currentPiece;
+        // N.B. don't call destructor because no heap allocation WITHIN the gamePiece occurs
+        delete currentPiece;
+        // choose new currentPiece
+        currentPiece = popPiece();
+
+    case -1 :
+    default :
+        break;
+    }
+
+
+}
+
+void Game::render() {
+    // clear render buffer & draw window base color
+    SDL_SetRenderDrawColor(renderer, 235, 233, 178, 0xff); // TODO set as a bg color
+    SDL_RenderClear(renderer);
+
+
+    // Render Game Field space
+
+    gameField->render();
+
+    currentPiece->render();
+
+    SDL_RenderPresent(renderer);
+}
+
+void Game::clean() {
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
+    std::cout << "Game cleaned." << std::endl;
 }
 
 bool Game::detectBlockage(enum Side side) {
@@ -86,7 +176,7 @@ bool Game::detectBlockage(enum Side side) {
     std::vector<std::vector<char>> gameFieldVec = gameField->accessPixelVec();
 
     switch (side) {
-    case Left :
+    case Left:
         possible = translateLocalToGlobal(currentPiece->accessPos(),
             gameField->accessPos());
         // Don't move if there is a fallen block to the left of any of the currentPiece blocks
@@ -104,7 +194,7 @@ bool Game::detectBlockage(enum Side side) {
             }
         }
         break;
-    case Right :
+    case Right:
         possible = translateLocalToGlobal(currentPiece->accessPos(),
             gameField->accessPos());
         // Don't move if there is a fallen block to the left of any of the currentPiece blocks
@@ -121,11 +211,53 @@ bool Game::detectBlockage(enum Side side) {
             }
         }
         break;
-    default :
+    default:
         break;
     }
 
-return false;
+    return false;
+}
+
+void Game::bumpRotation() {
+    bool OOB = true;
+    int WH = currentPiece->getWidth();
+    int fieldW = gameField->getWidth();
+    Position lPiecePosition = translateLocalToGlobal(currentPiece->accessPos(), gameField->accessPos());
+    std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
+
+    for (int y = 0; y < WH; y++) {
+        for (int x = 0; x < WH; x++) {
+            while (OOB) {
+                // Check if we are out of bounds
+                if (pieceVec[y][x]) {
+                    std::cout << "checking..." << std::endl; // ERROR
+                    if ((x + lPiecePosition.x) < 0) {
+                        currentPiece->move(1, 0);
+                    }
+                    else if ((x + lPiecePosition.x) >= fieldW) {
+                        currentPiece->move(-1, 0);
+                    }
+                    else {
+                        // no longer OOB
+                        break;
+                    }
+                }
+                // No block in this position
+                break;
+            }
+        }
+    }
+}
+
+GamePiece* Game::popPiece() {
+    GamePiece* ret = piecesQueue.front();
+    piecesQueue.pop();
+
+    GamePiece* newPiece = new GamePiece(renderer, Game_gUnit, Piece(prng(mt)), FIELD_WIDTH, gameField->accessPos());
+
+    piecesQueue.push(newPiece);
+
+    return ret;
 }
 
 // NOTICE: Abandoned lol but the code could come in handy later
@@ -183,142 +315,6 @@ Position Game::quickFall() {
     return returnVal;
 
 }
-
-void Game::processKeyEvent(SDL_Event event) {
-    bool rotationFlag = false;
-
-    switch (event.key.keysym.sym) {
-    case SDLK_UP:
-        // Fall until collision detected
-        while (detectCollision(*currentPiece, *gameField) == -1) {
-            currentPiece->move(0, 1);
-        }
-        break;
-    case SDLK_DOWN:
-        currentPiece->move(0, 1);
-        break;
-    case SDLK_LEFT:
-        if (detectBlockage(Left) == false)
-            currentPiece->move(-1, 0);
-        break;
-    case SDLK_RIGHT:
-        if (detectBlockage(Right) == false)
-            currentPiece->move(1, 0);
-        break;
-    case SDLK_x:
-    case SDLK_z:
-        currentPiece->rotate(event);
-        rotationFlag = true;
-        break;
-    default:
-        break;
-    }
-
-    if (rotationFlag) {
-        bumpRotation();
-    }
-    
-}
-
-void Game::bumpRotation() {
-    bool OOB = true;
-    int WH = currentPiece->getWidth();
-    int fieldW = gameField->getWidth();
-    Position lPiecePosition = translateLocalToGlobal(currentPiece->accessPos(), gameField->accessPos());
-    std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
-
-    for (int y = 0; y < WH; y++) {
-        for (int x = 0; x < WH; x++) {
-            while (OOB) {
-                // Check if we are out of bounds
-                if (pieceVec[y][x]) {
-                    std::cout << "checking..." << std::endl; // ERROR
-                    if ((x + lPiecePosition.x) < 0) {
-                        currentPiece->move(1, 0);
-                    }
-                    else if ((x + lPiecePosition.x) >= fieldW) {
-                        currentPiece->move(-1, 0);
-                    }
-                    else {
-                        // no longer OOB
-                        break;
-                    }
-                }
-                // No block in this position
-                break;
-            }
-        }
-    }
-}
-
-// TODO document
-// Process io events
-// Right now, just quit and key events
-void Game::handleEvents() {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-
-    switch (event.type) {
-    case SDL_QUIT:
-        isRunning = false;
-        break;
-    case SDL_KEYDOWN:
-        processKeyEvent(event);
-    default:
-        break;
-    }
-}
-
-void Game::update() { 
-
-    // update game variables
-
-    currentPiece->update();
-
-    // detect whether a block has landed
-    int collision = detectCollision(*currentPiece, *gameField);
-    switch (collision) {
-    case 1 :
-        // bumb the piece back
-        currentPiece->move(0, -1);
-    case 0:
-        // absorb the piece into field
-        gameField->absorb(*currentPiece);
-        // choose new currentPiece
-        //delete currentPiece;
-        // TODO pop the queue!
-        currentPiece = popPiece();
-    case -1 :
-    default :
-        break;
-    }
-
-
-}
-
-void Game::render() {
-    // clear render buffer & draw window base color
-    SDL_SetRenderDrawColor(renderer, 235, 233, 178, 0xff); // TODO set as a bg color
-    SDL_RenderClear(renderer);
-
-
-    // Render Game Field space
-
-    gameField->render();
-
-    currentPiece->render();
-
-    SDL_RenderPresent(renderer);
-}
-
-void Game::clean() {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-    std::cout << "Game cleaned." << std::endl;
-}
-
-
 /*          FUNCTIONS           */
 
 // TODO : allow things to land by moving in from the left

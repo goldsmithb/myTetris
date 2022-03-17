@@ -254,6 +254,8 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	//std::cout << "Exiting GamePiece constructor. &renderer = " << int(renderer) << std::endl; // ERROR
 }
 
+
+
 void GamePiece::update() {
 	// All blocks fall at base speed 2 units per second
 	// at 60 frames/s that means 1 unit (yet undefined) every 30 frames

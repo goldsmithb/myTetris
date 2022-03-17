@@ -57,7 +57,7 @@ public:
 	 * 
 	 */
 	GamePiece(SDL_Renderer* ren, int unitSize, Piece PieceTypeID, int GFWidth, Position GFXY);
-	~GamePiece();
+	//~GamePiece();
 
 	/*		METHODS		*/
 
