@@ -124,8 +124,8 @@ bool Game::detectBlockage(enum Side side) {
     default :
         break;
     }
-    
-    return false;
+
+return false;
 }
 
 // NOTICE: Abandoned lol but the code could come in handy later
@@ -163,7 +163,7 @@ Position Game::quickFall() {
     }
 
     std::cout << "shadow span: begin at " << shadowX << " -- " << shadowEnd << std::endl; // ERROR
-   
+
     // check the gameField from bottom up to find the top block in the column
     int fieldVecW = gameField->getWidth();
     int fieldVecH = gameField->getHeight();
@@ -185,6 +185,8 @@ Position Game::quickFall() {
 }
 
 void Game::processKeyEvent(SDL_Event event) {
+    bool rotationFlag = false;
+
     switch (event.key.keysym.sym) {
     case SDLK_UP:
         // Fall until collision detected
@@ -206,9 +208,46 @@ void Game::processKeyEvent(SDL_Event event) {
     case SDLK_x:
     case SDLK_z:
         currentPiece->rotate(event);
+        rotationFlag = true;
         break;
     default:
         break;
+    }
+
+    if (rotationFlag) {
+        bumpRotation();
+    }
+    
+}
+
+void Game::bumpRotation() {
+    bool OOB = true;
+    int WH = currentPiece->getWidth();
+    int fieldW = gameField->getWidth();
+    Position lPiecePosition = translateLocalToGlobal(currentPiece->accessPos(), gameField->accessPos());
+    std::vector<std::vector<char>> pieceVec = currentPiece->accessPixelVec();
+
+    for (int y = 0; y < WH; y++) {
+        for (int x = 0; x < WH; x++) {
+            while (OOB) {
+                // Check if we are out of bounds
+                if (pieceVec[y][x]) {
+                    std::cout << "checking..." << std::endl; // ERROR
+                    if ((x + lPiecePosition.x) < 0) {
+                        currentPiece->move(1, 0);
+                    }
+                    else if ((x + lPiecePosition.x) >= fieldW) {
+                        currentPiece->move(-1, 0);
+                    }
+                    else {
+                        // no longer OOB
+                        break;
+                    }
+                }
+                // No block in this position
+                break;
+            }
+        }
     }
 }
 

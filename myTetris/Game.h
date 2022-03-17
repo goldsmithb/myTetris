@@ -58,6 +58,10 @@ public:
     // player presses the up-key
     bool detectBlockage(enum Side side);
 
+    // check if we have rotated a piece out of bounds and
+    // shift appropriately
+    void bumpRotation();
+
     // wrapper for popping out a current piece
     // and pushing a new random piece onto the piecesQueue
     GamePiece* popPiece();
