@@ -1,19 +1,19 @@
 #include "GameField.h"
 
 GameField::GameField(SDL_Renderer* ren, Color c, int unitSize, int winW, int winH)
-	: GameObject(ren, FIELD_WIDTH, FIELD_HEIGHT, unitSize)
+	: GameObject(ren, FIELD_WIDTH, FIELD_HEIGHT)
 {
     bgColor = c;
     color = { 0xd3, 0xd3, 0xd3 };
 
     // calculate position by first converting the window dimensions from pixels to units,
     // performing the calculation, then converting back to pixels
-    pos.x = unit * std::abs(((winW / unit) - FIELD_WIDTH) / 2);
-    pos.y = unit * std::abs(((winH / unit) - FIELD_HEIGHT) / 2);
+    pos.x = GameObject::gUnit* std::abs(((winW / GameObject::gUnit) - FIELD_WIDTH) / 2);
+    pos.y = GameObject::gUnit * std::abs(((winH / GameObject::gUnit) - FIELD_HEIGHT) / 2);
     fieldRect.x = pos.x;
     fieldRect.y = pos.y;
-    fieldRect.w = FIELD_WIDTH * unit;
-    fieldRect.h = FIELD_HEIGHT * unit;
+    fieldRect.w = FIELD_WIDTH * GameObject::gUnit;
+    fieldRect.h = FIELD_HEIGHT * GameObject::gUnit;
 
     std::cout << " fieldMatrix rows : " << pixelVec.size() << std::endl;
     std::cout << " fieldMatrix collumns : " << pixelVec.at(0).size() << std::endl;
@@ -29,6 +29,8 @@ void GameField::render() {
     GameObject::render();
 }
 
+// ATM, basically checks for line clears. This should likely be put in a new fn in 
+// case more things are added to update() later
 void GameField::update() {
     //std::cout << "Entered GameField::update()\n";               // ERROR
 

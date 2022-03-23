@@ -7,14 +7,8 @@
 
 
 /*      GLOBAL VARIABLES		*/
-//extern int gUnit;				// declared in GameObject.cpp, externed to Game.cpp
-// TODO this is a work around
-const int gUnit = 20; // declared in Game.cpp as well
 
 /*      CONSTANTS		*/
-const int FIELD_WIDTH = 10;			// gameField width in units
-const int FIELD_HEIGHT = 20;		// gameField height in units
-
 
 /*      STRUCTS                 */
 // TODO these should probably be in some external, though I haven't decided yet
@@ -56,13 +50,16 @@ typedef struct Color {
  */
 class GameObject {
 public:
+	/*      STATIC PROPERTIES */
+	static const int gUnit = 20;			// value of an in-game 'pixel' unit in actual pixels
+	static const int FIELD_WIDTH = 10;		// gameField width in units
+	static const int FIELD_HEIGHT = 20;		// gameField height in units
 
-	
 
 	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position
 	// TODO pass SDL_Renderer by reference !! in non C style :)
-	GameObject(SDL_Renderer* ren, int w, int h, int unitSize);
+	GameObject(SDL_Renderer* ren, int w, int h);
 	GameObject();
 	//~GameObject();
 
@@ -88,6 +85,8 @@ public:
 
 	Position& accessPos() { return pos; }
 
+	void setPos(Position p) { pos = p; }
+
 	std::vector<std::vector<char>>& accessPixelVec() { return pixelVec; }
 
 	int getHeight() { return height; }
@@ -106,7 +105,7 @@ protected:
 	// renderer needed for rendering. Will pass in game renderer by reference
 	SDL_Renderer* renderer;
 
-	unsigned char unit; // for storing the gUnit value // QUESTION this seems inelegant, to copy it
+	//unsigned char unit; // for storing the gUnit value // QUESTION this seems inelegant, to copy it
 
 	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
 

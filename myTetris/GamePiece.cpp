@@ -263,7 +263,7 @@ Color setColor(Piece pieceType) {
 }
 
 GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFWidth, Position GFXY)
-	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT, unitSize), 
+	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT),
 	  cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
 {
 	//std::cout << "called gamePiece override constructor" << std::endl;	// ERROR
@@ -273,7 +273,7 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	//		  so this is all wrong lol
 	pos.x = GFXY.x;
 	pos.y = GFXY.y;
-	pos.x += unit * ((GFWidth - PIECE_WIDTH_HEIGHT) / 2);
+	pos.x += GameObject::gUnit * ((GFWidth - PIECE_WIDTH_HEIGHT) / 2);
 
 	// set color based on piece type
 	color = setColor(pieceType);
@@ -293,7 +293,7 @@ void GamePiece::update() {
 	cnt += 1;
 	// if enough frames have elapsed, fall 1 unit
 	if ((cnt % speed) == 0) {
-		pos.y += unit;
+		pos.y += GameObject::gUnit;
 	}
 
 	// save this state into rect so that it can be rendered

@@ -16,7 +16,6 @@
 // TODO this seems to be needed in order to have a subclass. Is there a more elegant workaround?
 GameObject::GameObject() {
 	//std::cout << "Called default GameObject constructor" << std::endl;; // ERROR
-	unit = 0;
 	pos.x = 0;
 	pos.y = 0;
 	width = height = 0;
@@ -33,23 +32,13 @@ GameObject::GameObject() {
 	//std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
 }
 
-// ERROR for debugging
-void print(const std::vector<std::vector<char>>& v)
-{
-	for (std::size_t i = 0; i < v.size(); ++i)
-	{
-		for (std::size_t j = 0; j < v[i].size(); ++j) std::cout << (int)v[i][j] << ' ';
-		std::cout << '\n';
-	}
-}
-
-GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, int unitSize) 
-	: renderer(ren), unit(unitSize), width(w), height(h)
+GameObject::GameObject(SDL_Renderer* ren, const int w, const int h) 
+	: renderer(ren), width(w), height(h)
 {
 	//std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
 
 	// Set rect's width and height to 1x1
-	rect.w = rect.h = unitSize;
+	rect.w = rect.h = GameObject::gUnit;
 
 	// Create pixel matrix of size h x w and populate with 0's
 	pixelVec.resize(h, std::vector<char>(w, 0));
@@ -57,8 +46,8 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, int unitSize
 
 
 void GameObject::move(int dx, int dy) {
-	pos.x += unit * dx;
-	pos.y += unit * dy;
+	pos.x += GameObject::gUnit * dx;
+	pos.y += GameObject::gUnit * dy;
 }
 
 void GameObject::move(Position newXY) { pos = newXY; }
@@ -100,8 +89,8 @@ void GameObject::render() {
 			// render any place there is non-zero
 			if (pixelVec[i][j] != 0) {
 				// translate matrix coordinate to x,y coordinate in pixels
-				rect.x = pos.x + (unit * j);
-				rect.y = pos.y + (unit * i);
+				rect.x = pos.x + (GameObject::gUnit * j);
+				rect.y = pos.y + (GameObject::gUnit * i);
 				SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
 				SDL_RenderFillRect(renderer, &rect); // draw rect
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
@@ -127,10 +116,20 @@ Position translateLocalToGlobal(Position global, Position localOG) {
 	global.y -= localOG.y;
 
 	// now convert to block coordinates
-	global.x /= gUnit;			// TODO gUnit
-	global.y /= gUnit;			// TODO gUnit
+	global.x /= GameObject::gUnit;
+	global.y /= GameObject::gUnit;
 
 	//std::cout << "(" << global.x << ", " << global.y << ")" << std::endl;		// ERROR
 
 	return global;
+}
+
+// ERROR for debugging
+void print(const std::vector<std::vector<char>>& v)
+{
+	for (std::size_t i = 0; i < v.size(); ++i)
+	{
+		for (std::size_t j = 0; j < v[i].size(); ++j) std::cout << (int)v[i][j] << ' ';
+		std::cout << '\n';
+	}
 }

@@ -1,12 +1,10 @@
 #include "Game.h"
 
-int Game_gUnit = 20; // declared in GameObject.h as well // TODO
-
 Game::Game()
     : windowTitle("myTetris"), windowXPos(SDL_WINDOWPOS_CENTERED), 
       windowYPos(SDL_WINDOWPOS_CENTERED), winW(gWidth), winH(gHeight), 
       fullscreen(false), isRunning(false), window(nullptr), renderer(nullptr),
-      currentPiece(nullptr), gameField(nullptr)
+      currentPiece(nullptr), heldPiece(nullptr), gameField(nullptr)
 {
     init(windowTitle, windowXPos, windowYPos, winW, winH, fullscreen);
 }
@@ -41,16 +39,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load all the gameObjects!
         // TODO : pieces queue
 
-        int x = 10;
+        int x = 10;                                 // ERROR
         while (x-- > 0) {
             std::cout << "PRNGPRNGPRNG : " << prng(mt) << std::endl;
         }
 
-        gameField = new GameField(renderer, lightBlue, Game_gUnit, width, height);
+        gameField = new GameField(renderer, lightBlue, GameObject::gUnit, width, height);
 
         // populate the queue
         for (int i = 0; i < 5; i++) {
-            GamePiece* newPiece = new GamePiece(renderer, Game_gUnit, Piece(prng(mt)), FIELD_WIDTH, gameField->accessPos());
+            GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), GameObject::FIELD_WIDTH, gameField->accessPos());
             piecesQueue.push(newPiece);
         }
 
@@ -89,6 +87,9 @@ void Game::processKeyEvent(SDL_Event event) {
         currentPiece->rotate(event);
         rotationFlag = true;
         break;
+    case SDLK_SPACE:
+        hold();
+        break;
     default:
         break;
     }
@@ -120,7 +121,7 @@ void Game::handleEvents() {
 void Game::update() { 
 
     // update game variables
-
+    gameField->update();
     currentPiece->update();
 
     // detect whether a block has landed
@@ -146,9 +147,6 @@ void Game::update() {
     default :
         break;
     }
-
-    gameField->update();
-
 
 }
 
@@ -260,7 +258,7 @@ GamePiece* Game::popPiece() {
     GamePiece* ret = piecesQueue.front();
     piecesQueue.pop();
 
-    GamePiece* newPiece = new GamePiece(renderer, Game_gUnit, Piece(prng(mt)), FIELD_WIDTH, gameField->accessPos());
+    GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), GameObject::FIELD_WIDTH, gameField->accessPos());
 
     piecesQueue.push(newPiece);
 
@@ -322,6 +320,34 @@ Position Game::quickFall() {
     return returnVal;
 
 }
+
+// handle the hold event:
+// set current piece as heldPiece
+// if there was already a heldPiece, set as currentPiece
+// else, popPiece
+
+void Game::hold() {
+    GamePiece* temp = heldPiece;
+
+    heldPiece = currentPiece;
+
+    // reset heldPiece pos
+    Position pos = currentPiece->accessPos();
+    Position GFXY = gameField->accessPos();
+    pos.x = GFXY.x;
+    pos.y = GFXY.y;
+    pos.x += gUnit * ((GameObject::FIELD_WIDTH - PIECE_WIDTH_HEIGHT) / 2);
+    currentPiece->setPos(pos);
+
+    if (temp) {
+        currentPiece = temp;
+    }
+    else {
+        currentPiece = popPiece();
+    }
+}
+
+
 /*          FUNCTIONS           */
 
 // TODO : allow things to land by moving in from the left/right

@@ -69,6 +69,12 @@ public:
     // method abandoned but keeping code in case useful
     Position quickFall();
 
+    // handle the hold event:
+    // If no piece is currently held, hold the currentPiece
+    // If currently holding a piece, set it as currentPiece
+    // and hold the currentPiece at time of event
+    void hold();
+
 private:
     const char* windowTitle;        // Title for the window
     int windowXPos;                 // window X Pos
@@ -84,6 +90,8 @@ private:
     SDL_Renderer* renderer;         // Global renderer
 
     GamePiece* currentPiece;        // Current Piece
+
+    GamePiece* heldPiece;           // Held Piece
 
     std::queue<GamePiece*> piecesQueue; // Pieces Queue
 
