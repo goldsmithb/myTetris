@@ -30,6 +30,8 @@ void GameField::render() {
 }
 
 void GameField::update() {
+    //std::cout << "Entered GameField::update()\n";               // ERROR
+
     for (int y = 0; y < this->height; y++) {
         int count = 0;
         for (int x = 0; x < this->width; x++) {
@@ -37,32 +39,35 @@ void GameField::update() {
                 count++;
             }
         }
-        // if line cleared, shift everything down
+        // if line cleared, delete row and shift everything down
         if (count == this->width) {
             pixelVec.erase(pixelVec.begin() + y);
             pixelVec.insert(pixelVec.begin(), std::vector<char>(this->width, 0));
         }
     }
+    //std::cout << "Exited GameField::update()\n";               // ERROR
 }
 
 
 void GameField::absorb(GameObject piece) {
-    std::vector<std::vector<char>> pieceMatrix;
-    Position pieceXY = { piece.accessPos().x, piece.accessPos().y };
+    // TODO : RN the bug is here (aborts when landing I block on empty bottom row on far left) and also there is a bug detecting right wall!
+    //std::cout << "Entered GameField::absorb()\n";               // ERROR
 
-    pieceXY = translateLocalToGlobal(pieceXY, this->pos);
-    pieceMatrix = piece.accessPixelVec();
+    std::vector<std::vector<char>> pieceVec = piece.accessPixelVec();
+    Position pieceXY = translateLocalToGlobal(piece.accessPos(), this->pos);
 
     // iterate through the piece pixelVec
-    for (int i = 0; i < piece.getHeight(); i++) {
-        for (int j = 0; j < piece.getWidth(); j++) {
+    for (int y = 0; y < piece.getHeight(); y++) {
+        for (int x = 0; x < piece.getWidth(); x++) {
             // record a value where needed
-            if (pieceMatrix[i][j]) {
-                //std::cout << "copying a block into the field at: [" << i<<"]["<<j<<"]" << std::endl; // ERROR
-                //std::cout << "                             into: [" << (pieceXY.y + i) << "][" << (pieceXY.x + j) << "]" << std::endl; // ERROR
-                this->pixelVec[pieceXY.y + i][pieceXY.x + j] = 1;
+            if (pieceVec[y][x]) {
+                std::cout << "copying a block into the field at: [" << y<<"]["<<x<<"]" << std::endl; // 
+
+                std::cout << "                             into: [" << (pieceXY.y + y) << "][" << (pieceXY.x + x) << "]" << std::endl; // ERROR
+                this->pixelVec[pieceXY.y + y][pieceXY.x + x] = 1;
             }
         }
     }
-    //printGameObjectVector();        // ERROR
+    //printGameObjectVector();                                 // ERROR
+    //std::cout << "Exited GameField::absorb()\n";               // ERROR
 }

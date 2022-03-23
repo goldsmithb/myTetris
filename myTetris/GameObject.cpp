@@ -15,7 +15,7 @@
 /*			PUBLIC METHODS			*/
 // TODO this seems to be needed in order to have a subclass. Is there a more elegant workaround?
 GameObject::GameObject() {
-	std::cout << "Called default GameObject constructor" << std::endl;; // ERROR
+	//std::cout << "Called default GameObject constructor" << std::endl;; // ERROR
 	unit = 0;
 	pos.x = 0;
 	pos.y = 0;
@@ -30,13 +30,23 @@ GameObject::GameObject() {
 
 	// Set rect's width and height to 1x1
 	rect.w = rect.h = 100;
-	std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
+	//std::cout << "&renderer = " << int(renderer) << std::endl;		// ERROR
+}
+
+// ERROR for debugging
+void print(const std::vector<std::vector<char>>& v)
+{
+	for (std::size_t i = 0; i < v.size(); ++i)
+	{
+		for (std::size_t j = 0; j < v[i].size(); ++j) std::cout << (int)v[i][j] << ' ';
+		std::cout << '\n';
+	}
 }
 
 GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, int unitSize) 
 	: renderer(ren), unit(unitSize), width(w), height(h)
 {
-	std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
+	//std::cout << "Called override GameObject constructor" << std::endl;; // ERROR
 
 	// Set rect's width and height to 1x1
 	rect.w = rect.h = unitSize;
@@ -44,6 +54,7 @@ GameObject::GameObject(SDL_Renderer* ren, const int w, const int h, int unitSize
 	// Create pixel matrix of size h x w and populate with 0's
 	pixelVec.resize(h, std::vector<char>(w, 0));
 }
+
 
 void GameObject::move(int dx, int dy) {
 	pos.x += unit * dx;
@@ -109,13 +120,17 @@ void GameObject::render() {
 // TODO this is probably bad because Position::Position has up to 
 // now only stored pixel coords...
 Position translateLocalToGlobal(Position global, Position localOG) {
+	//std::cout << "(" << global.x << ", " << global.y << ") -->";					// ERROR
+	
 	// perform translation
 	global.x -= localOG.x;
 	global.y -= localOG.y;
 
 	// now convert to block coordinates
-	global.x /= 15;			// TODO gUnit
-	global.y /= 15;			// TODO gUnit
+	global.x /= gUnit;			// TODO gUnit
+	global.y /= gUnit;			// TODO gUnit
+
+	//std::cout << "(" << global.x << ", " << global.y << ")" << std::endl;		// ERROR
 
 	return global;
 }

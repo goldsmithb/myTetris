@@ -266,7 +266,7 @@ GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFW
 	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT, unitSize), 
 	  cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
 {
-	std::cout << "called gamePiece override constructor" << std::endl;	// ERROR
+	//std::cout << "called gamePiece override constructor" << std::endl;	// ERROR
 
 	// set Piece's position to middle of the screen
 	// TODO : this changes based on the pieceType and the position of the game field

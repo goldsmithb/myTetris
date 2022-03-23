@@ -8,11 +8,12 @@
 
 /*      GLOBAL VARIABLES		*/
 //extern int gUnit;				// declared in GameObject.cpp, externed to Game.cpp
-
+// TODO this is a work around
+const int gUnit = 20; // declared in Game.cpp as well
 
 /*      CONSTANTS		*/
-const int FIELD_WIDTH = 15;			// gameField width in units
-const int FIELD_HEIGHT = 28;		// gameField height in units
+const int FIELD_WIDTH = 10;			// gameField width in units
+const int FIELD_HEIGHT = 20;		// gameField height in units
 
 
 /*      STRUCTS                 */
@@ -56,8 +57,7 @@ typedef struct Color {
 class GameObject {
 public:
 
-	// TODO this is a work around
-	int gUnit = 15;
+	
 
 	/*		CONSTRUCTORS	*/
 	// width is the window width -- used to calculate starting position

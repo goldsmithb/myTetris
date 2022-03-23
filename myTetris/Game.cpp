@@ -1,6 +1,6 @@
 #include "Game.h"
 
-int Game_gUnit = 15; // declared in GameObject.h // TODO
+int Game_gUnit = 20; // declared in GameObject.h as well // TODO
 
 Game::Game()
     : windowTitle("myTetris"), windowXPos(SDL_WINDOWPOS_CENTERED), 
@@ -127,18 +127,22 @@ void Game::update() {
     int collision = detectCollision(*currentPiece, *gameField);
     switch (collision) {
     case 1 :
-        // bumb the piece back
+        // We collided with a block --> bumb the piece back
+        //std::cout << "Debugging collisions:\n";         // ERROR
+        //currentPiece->printGameObjectVector();          // ERROR
+        //gameField->printGameObjectVector();             // ERROR
         currentPiece->move(0, -1);
     case 0:
+        // landed on bottom row, no need to bump
         // absorb the piece into field
         gameField->absorb(*currentPiece);
         // delete currentPiece;
-        // N.B. don't call destructor because no heap allocation WITHIN the gamePiece occurs
+        // N.B. we don't call destructor because no heap allocation WITHIN the gamePiece struct occurs
         delete currentPiece;
         // choose new currentPiece
         currentPiece = popPiece();
 
-    case -1 :
+    case -1 : // no collision
     default :
         break;
     }
@@ -150,6 +154,7 @@ void Game::update() {
 
 void Game::render() {
     // clear render buffer & draw window base color
+    //std::cout << "entered Game::render()\n";                // ERROR
     SDL_SetRenderDrawColor(renderer, 235, 233, 178, 0xff); // TODO set as a bg color
     SDL_RenderClear(renderer);
 
@@ -232,7 +237,7 @@ void Game::bumpRotation() {
             while (OOB) {
                 // Check if we are out of bounds
                 if (pieceVec[y][x]) {
-                    std::cout << "checking..." << std::endl; // ERROR
+                    //std::cout << "checking..." << std::endl; // ERROR
                     if ((x + lPiecePosition.x) < 0) {
                         currentPiece->move(1, 0);
                     }
@@ -296,7 +301,7 @@ Position Game::quickFall() {
         }
     }
 
-    std::cout << "shadow span: begin at " << shadowX << " -- " << shadowEnd << std::endl; // ERROR
+    //std::cout << "shadow span: begin at " << shadowX << " -- " << shadowEnd << std::endl; // ERROR
 
     // check the gameField from bottom up to find the top block in the column
     int fieldVecW = gameField->getWidth();
@@ -319,7 +324,7 @@ Position Game::quickFall() {
 }
 /*          FUNCTIONS           */
 
-// TODO : allow things to land by moving in from the left
+// TODO : allow things to land by moving in from the left/right
 // TODO if returns true: move the piece up one unit, let the field absorb it :) yum
 // returns: -1 if no collision
 //          0 if collided with the field's floor
@@ -332,39 +337,38 @@ int detectCollision(GameObject piece, GameObject field) {
     int pieceVecSize = piece.getHeight();
 
     // store piece's pixel pos relative to field's local origin
-    Position fieldGXY = { field.accessPos().x, field.accessPos().y };
-    Position pieceLXY = { piece.accessPos().x, piece.accessPos().y };
+    Position fieldGXY = field.accessPos();
+    Position pieceLXY = piece.accessPos();
     // TODO : NOTE THAT THIS POS IS IN UNITS!
 
     pieceLXY = translateLocalToGlobal(pieceLXY, fieldGXY);
 
     // QUESTION  is this 4x nested for loop needed? So uggo
-    // TODO check from top to bottom - optimize
     // check for collisions
     for (int i = 0; i < fieldHeight; i++) {
         for (int j = 0; j < fieldWidth; j++) {
-            if (fieldMatrix[i][j] != 0 ||
-                i == (fieldHeight - 1))    // always land on bottom row
-            {
-                // check for collision
+            // For each landed block and the entire bottom row, check collision
+            // cases: block on none-bottom row
+            //        empty bottom row
+            //        block on bottom row
+            if (fieldMatrix[i][j] || i == (fieldHeight - 1)) {
+                // Check if there is a collision with any block in the currentPiece
                 for (int y = 0; y < pieceVecSize; y++) {
                     for (int x = 0; x < pieceVecSize; x++) {
-                        if (pieceMatrix[y][x] != 0) {
-                            if (i == (pieceLXY.y + y) &&
-                                j == (pieceLXY.x + x))
-                            {
-                                std::cout << "possible collision" << std::endl;
-                                std::cout << "i: " << i << "\tj: " << j << "\nlocal y: " << (pieceLXY.y) << "\tlocal x: " << (pieceLXY.x) << std::endl;
-                                // TODO : this fn might not be doing what I want exactly...
-                                // did we collide, or just hit the bottom?
-                                if (fieldMatrix[i][j] == 0) {
-                                    return 0;
-                                }
-                                else {
-                                    std::cout << "collision detected!!" << std::endl; // ERROR
-                                    return 1;
-                                }
+                        // check if the localized coordinates match --> collision
+                        if (pieceMatrix[y][x] && i == (pieceLXY.y + y) && j == (pieceLXY.x + x)) {
+                            std::cout << "possible collision at:" << std::endl;
+                            std::cout << "\tGlobal y: " << i << "\tx: " << j << "\n\tLocal y: " << (pieceLXY.y) << "\tLocal x: " << (pieceLXY.x) << std::endl;
+                            // TODO : this fn might not be doing what I want exactly...
+                            // did we collide, or just hit the bottom?
+                            if (fieldMatrix[i][j] == 0) {
+                                return 0;
                             }
+                            else {
+                                std::cout << "collision detected!!" << std::endl; // ERROR
+                                return 1;
+                            }
+
                         }
                     }
                 }
@@ -372,5 +376,6 @@ int detectCollision(GameObject piece, GameObject field) {
         }
     }
 
+    // No collision detected
     return -1;
 }
