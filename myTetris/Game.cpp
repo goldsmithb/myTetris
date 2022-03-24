@@ -55,6 +55,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Make the first piece
         currentPiece = popPiece(); 
 
+        // Initialize piecePreview objects
+        Position heldPiecePrevPos = { gameField->accessPos().x - 5 * GameObject::gUnit, gameField->accessPos().y };
+        //heldPiecePreview = PiecePreview(heldPiecePrevPos, nullptr, renderer, "HELD PIECE");
+
     } else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
         isRunning = false;
@@ -147,7 +151,6 @@ void Game::update() {
     default :
         break;
     }
-
 }
 
 void Game::render() {
@@ -371,30 +374,25 @@ int detectCollision(GameObject piece, GameObject field) {
 
     // QUESTION  is this 4x nested for loop needed? So uggo
     // check for collisions
-    for (int i = 0; i < fieldHeight; i++) {
+    for (int i = 0; i <= fieldHeight; i++) {
         for (int j = 0; j < fieldWidth; j++) {
             // For each landed block and the entire bottom row, check collision
             // cases: block on none-bottom row
             //        empty bottom row
             //        block on bottom row
-            if (fieldMatrix[i][j] || i == (fieldHeight - 1)) {
+            if (i == fieldHeight || fieldMatrix[i][j]) { // working here -- trying to get it to allow the block to fall thru the botttom and then bump it up
                 // Check if there is a collision with any block in the currentPiece
                 for (int y = 0; y < pieceVecSize; y++) {
                     for (int x = 0; x < pieceVecSize; x++) {
-                        // check if the localized coordinates match --> collision
-                        if (pieceMatrix[y][x] && i == (pieceLXY.y + y) && j == (pieceLXY.x + x)) {
-                            std::cout << "possible collision at:" << std::endl;
-                            std::cout << "\tGlobal y: " << i << "\tx: " << j << "\n\tLocal y: " << (pieceLXY.y) << "\tLocal x: " << (pieceLXY.x) << std::endl;
-                            // TODO : this fn might not be doing what I want exactly...
-                            // did we collide, or just hit the bottom?
-                            if (fieldMatrix[i][j] == 0) {
-                                return 0;
-                            }
-                            else {
-                                std::cout << "collision detected!!" << std::endl; // ERROR
+                        if (pieceMatrix[y][x]) {// && i == (pieceLXY.y + y) && j == (pieceLXY.x + x)) {
+                            // check if we hit the bottom
+                            if ((pieceLXY.y + y) == fieldHeight) {
                                 return 1;
                             }
-
+                            // check if the localized coordinates match --> collision
+                            if (i == (pieceLXY.y + y) && j == (pieceLXY.x + x)) {
+                                return 1;
+                            }
                         }
                     }
                 }

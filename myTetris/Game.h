@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "GamePiece.h"
 #include "GameField.h"
+#include "PiecePreview.h"
 
 /*      ENUMS           */
 // A simple 2-member enum to encode which side of
@@ -20,11 +21,9 @@ const int gFPS = 60;
 const int gFrameDelay = 1000 / gFPS;
 const int gWidth = 300;                     // window width in # pixels
 const int gHeight = 800;                    // window height in # pixels
-//const int gUnit; // TODO maybe? declared in Game.cpp
 const Color gBackGroundColor = { 200, 162, 200 }; // TODO use this in init
 const Color lightBlue = { 0xcc, 0xe6, 0xff };
 const Position gOrigin = { 0, 0 };
-
 
 /* Game class
  * 
@@ -89,13 +88,17 @@ private:
 
     SDL_Renderer* renderer;         // Global renderer
 
-    GamePiece* currentPiece;        // Current Piece
+    GamePiece* currentPiece;
 
-    GamePiece* heldPiece;           // Held Piece
+    GamePiece* heldPiece;
 
-    std::queue<GamePiece*> piecesQueue; // Pieces Queue
+    std::queue<GamePiece*> piecesQueue;
 
-    GameField* gameField;           // Game Field
+    GameField* gameField;
+
+    PiecePreview heldPiecePreview;
+
+    std::queue<PiecePreview> piecesQueuePreviewQueue;
 
     std::mt19937 mt{ static_cast<unsigned int>(
             std::chrono::steady_clock::now().time_since_epoch().count()

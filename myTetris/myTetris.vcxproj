@@ -149,6 +149,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GamePiece.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PiecePreview.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="GameField.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GamePiece.h" />
+    <ClInclude Include="PiecePreview.h" />
     <ClInclude Include="piecesGuide.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
