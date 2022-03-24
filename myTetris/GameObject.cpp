@@ -79,13 +79,9 @@ void GameObject::render() {
 	// Set render draw color
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xff);
 
-	int jWidth, iHeight;
-	jWidth = this->width;
-	iHeight = this->height;
-
 	// Render the "pixels"
-	for (int i = 0; i < iHeight; i++) {
-		for (int j = 0; j < jWidth; j++) {
+	for (int i = 0; i < this->height; i++) {
+		for (int j = 0; j < this->width; j++) {
 			// render any place there is non-zero
 			if (pixelVec[i][j] != 0) {
 				// translate matrix coordinate to x,y coordinate in pixels

@@ -57,7 +57,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         // Initialize piecePreview objects
         Position heldPiecePrevPos = { gameField->accessPos().x - 5 * GameObject::gUnit, gameField->accessPos().y };
-        //heldPiecePreview = PiecePreview(heldPiecePrevPos, nullptr, renderer, "HELD PIECE");
+        heldPiecePreview = PiecePreview(heldPiecePrevPos, nullptr, renderer, "HELD PIECE");
 
     } else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
