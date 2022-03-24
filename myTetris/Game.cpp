@@ -56,8 +56,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         currentPiece = popPiece(); 
 
         // Initialize piecePreview objects
-        Position heldPiecePrevPos = { gameField->accessPos().x - 5 * GameObject::gUnit, gameField->accessPos().y };
+        Position heldPiecePrevPos = { gameField->accessPos().x - (5 * GameObject::gUnit), gameField->accessPos().y };
         heldPiecePreview = PiecePreview(heldPiecePrevPos, nullptr, renderer, "HELD PIECE");
+        std::cout << "gamefield pos : (" << gameField->accessPos().x << ", " << gameField->accessPos().y << ")" << std::endl;
+        std::cout << "heldPiecePrevPos : (" << heldPiecePrevPos.x << ", " << heldPiecePrevPos.y << ")" << std::endl;
 
     } else {
         std::cout << "SDL Failed to initialize. Error: " << SDL_GetError() << std::endl;
@@ -101,7 +103,6 @@ void Game::processKeyEvent(SDL_Event event) {
     if (rotationFlag) {
         bumpRotation();
     }
-    
 }
 
 // TODO document
@@ -165,6 +166,8 @@ void Game::render() {
     gameField->render();
 
     currentPiece->render();
+
+    heldPiecePreview.render();
 
     SDL_RenderPresent(renderer);
 }
@@ -333,21 +336,24 @@ void Game::hold() {
     GamePiece* temp = heldPiece;
 
     heldPiece = currentPiece;
-
+    heldPiecePreview.setPiece(heldPiece);
+    // change held piece pos to heldPiecePreview
+    heldPiece->setPos({ heldPiecePreview.accessPos().x, heldPiecePreview.accessPos().y });
+    
     // reset heldPiece pos
-    Position pos = currentPiece->accessPos();
-    Position GFXY = gameField->accessPos();
-    pos.x = GFXY.x;
-    pos.y = GFXY.y;
-    pos.x += gUnit * ((GameObject::FIELD_WIDTH - PIECE_WIDTH_HEIGHT) / 2);
-    currentPiece->setPos(pos);
-
     if (temp) {
         currentPiece = temp;
     }
     else {
         currentPiece = popPiece();
     }
+
+    Position pos = currentPiece->accessPos();
+    Position GFXY = gameField->accessPos();
+    pos.x = GFXY.x;
+    pos.y = GFXY.y;
+    pos.x += gUnit * ((GameObject::FIELD_WIDTH - PIECE_WIDTH_HEIGHT) / 2);
+    currentPiece->setPos(pos);
 }
 
 

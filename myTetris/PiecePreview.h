@@ -15,6 +15,8 @@ public:
 
     void setPiece(GamePiece* gp) { piece = gp; }
 
+    Position& accessPos() { return pos; }
+
     void render();
 
 private:

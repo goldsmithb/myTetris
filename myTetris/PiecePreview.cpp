@@ -16,6 +16,7 @@ PiecePreview::PiecePreview(Position p, GamePiece * gamePiece, SDL_Renderer * r, 
     : pos(p), piece(gamePiece), renderer(r), title(t) 
 {
     rect.w = rect.h = 5 * GameObject::gUnit;
+    rect.x = pos.x, rect.y = pos.y;
 }
 
 void PiecePreview::render() {
@@ -27,5 +28,8 @@ void PiecePreview::render() {
     // draw held piece
     if (piece) {
         piece->render();
+        //std::cout << "-hPP pos: " << pos.x << " " << pos.y << "." << std::endl;
+        //std::cout << "-hP pos: " << piece->accessPos().x << " " << piece->accessPos().y << "." << std::endl;
+
     }
 }
