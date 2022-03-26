@@ -99,13 +99,10 @@ protected:
 	// 2D vector telling us which grid squares are occupied
 	std::vector<std::vector<char>> pixelVec;
 
-	// Rectangles representing the game object
-	SDL_Rect rect;
+	SDL_Rect rect;		// Rectangles representing the game object
 
 	// renderer needed for rendering. Will pass in game renderer by reference
 	SDL_Renderer* renderer;
-
-	//unsigned char unit; // for storing the gUnit value // QUESTION this seems inelegant, to copy it
 
 	Color color; // for storing R G B value of the object  TODO - link this to the pieceType using enum Piece
 

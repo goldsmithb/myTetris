@@ -262,19 +262,13 @@ Color setColor(Piece pieceType) {
 	return ret;
 }
 
-GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, int GFWidth, Position GFXY)
+GamePiece::GamePiece(SDL_Renderer* ren, int unitSize, Piece pieceTypeID, Position GFXY)
 	: GameObject(ren, PIECE_WIDTH_HEIGHT, PIECE_WIDTH_HEIGHT),
 	  cnt(0), speed(60), pieceType(pieceTypeID), rotation(Rotation::Default)
 {
 	//std::cout << "called gamePiece override constructor" << std::endl;	// ERROR
-
-	// set Piece's position to middle of the screen
-	// TODO : this changes based on the pieceType and the position of the game field
-	//		  so this is all wrong lol
-	pos.x = GFXY.x;
-	pos.y = GFXY.y;
-	pos.x += GameObject::gUnit * ((GFWidth - PIECE_WIDTH_HEIGHT) / 2);
-
+	centerPiece(GFXY);
+	
 	// set color based on piece type
 	color = setColor(pieceType);
 
@@ -331,4 +325,25 @@ void GamePiece::rotate(SDL_Event event) {
 	default:
 		break;
 	}
+}
+
+void GamePiece::centerPiece(Position GFXY) {
+	pos.x = GFXY.x;
+	pos.y = GFXY.y;
+	pos.x += GameObject::gUnit * ((GameObject::FIELD_WIDTH - PIECE_WIDTH_HEIGHT) / 2);
+	switch (pieceType) {
+	case Piece::Square:
+	case Piece::N:
+	case Piece::NReverse:
+	case Piece::Psi:
+		pos.y -= 2 * GameObject::gUnit;
+		break;
+	case Piece::L:
+	case Piece::I:
+	case Piece::LReverse:
+		pos.y -= GameObject::gUnit;
+		break;
+	}
+	std::cout << "GFXY in centerPiece : " << GFXY.x << ", " << GFXY.y << std::endl;
+
 }

@@ -39,16 +39,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         // Load all the gameObjects!
         // TODO : pieces queue
 
-        int x = 10;                                 // ERROR
-        while (x-- > 0) {
-            std::cout << "PRNGPRNGPRNG : " << prng(mt) << std::endl;
-        }
-
         gameField = new GameField(renderer, lightBlue, GameObject::gUnit, width, height);
 
         // populate the queue
         for (int i = 0; i < 5; i++) {
-            GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), GameObject::FIELD_WIDTH, gameField->accessPos());
+            GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), gameField->accessPos());
             piecesQueue.push(newPiece);
         }
 
@@ -264,7 +259,7 @@ GamePiece* Game::popPiece() {
     GamePiece* ret = piecesQueue.front();
     piecesQueue.pop();
 
-    GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), GameObject::FIELD_WIDTH, gameField->accessPos());
+    GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), gameField->accessPos());
 
     piecesQueue.push(newPiece);
 
@@ -348,12 +343,7 @@ void Game::hold() {
         currentPiece = popPiece();
     }
 
-    Position pos = currentPiece->accessPos();
-    Position GFXY = gameField->accessPos();
-    pos.x = GFXY.x;
-    pos.y = GFXY.y;
-    pos.x += gUnit * ((GameObject::FIELD_WIDTH - PIECE_WIDTH_HEIGHT) / 2);
-    currentPiece->setPos(pos);
+    currentPiece->centerPiece(gameField->accessPos());
 }
 
 

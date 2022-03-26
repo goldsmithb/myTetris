@@ -3,6 +3,15 @@
 
 /*		CONSTANTS		*/
 const int PIECE_WIDTH_HEIGHT = 5;
+// Array of starting positions indexed by enum class Piece
+const Position startingPositions[] = {{1, 1}, 
+									  {2, 1},
+									  {2, 1},
+									  {2, 1},
+									  {2, 1},
+									  {2, 1},
+									  {2, 1},
+};
 
 /*		ENUMS					*/
 // TODO : create a piece subclass? Q: should a piece and the game field share ALL methods?
@@ -56,7 +65,7 @@ public:
 	 *
 	 * 
 	 */
-	GamePiece(SDL_Renderer* ren, int unitSize, Piece PieceTypeID, int GFWidth, Position GFXY);
+	GamePiece(SDL_Renderer* ren, int unitSize, Piece PieceTypeID, Position GFXY);
 	//~GamePiece();
 
 	/*		METHODS		*/
@@ -70,6 +79,10 @@ public:
 	// This means changing the rotation value and the pixelArray ptr
 	void rotate(SDL_Event event);
 
+	// center the position of a piece so that it starts in the right place
+	// take in the gameField's position and width for calculation
+	void centerPiece(Position GFXY);
+
 	void printRendererPtr() {
 		std::cout << "print renderer ptr: renderer pts to " << int(renderer) << std::endl;
 	}
@@ -79,7 +92,8 @@ private:
 	int cnt; // for counting until fall speed
 	int speed; // how many frames to fall 1 unit - initially 60 or once per second
 	// will be set based on level eventually
-	Piece pieceType; // piece shape
-	Rotation rotation; // rotation state
+	Piece pieceType;
+	Rotation rotation;
+	Position startingPosition;
 
 };
