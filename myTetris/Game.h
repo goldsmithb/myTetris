@@ -108,4 +108,4 @@ private:
 };
 
 /*          FUNCTIONS           */
-int detectCollision(GameObject piece, GameObject field);
+bool detectCollision(GameObject piece, GameObject field);

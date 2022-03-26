@@ -3,15 +3,6 @@
 
 /*		CONSTANTS		*/
 const int PIECE_WIDTH_HEIGHT = 5;
-// Array of starting positions indexed by enum class Piece
-const Position startingPositions[] = {{1, 1}, 
-									  {2, 1},
-									  {2, 1},
-									  {2, 1},
-									  {2, 1},
-									  {2, 1},
-									  {2, 1},
-};
 
 /*		ENUMS					*/
 // TODO : create a piece subclass? Q: should a piece and the game field share ALL methods?

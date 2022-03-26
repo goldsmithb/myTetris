@@ -68,7 +68,7 @@ void Game::processKeyEvent(SDL_Event event) {
     switch (event.key.keysym.sym) {
     case SDLK_UP:
         // Fall until collision detected
-        while (detectCollision(*currentPiece, *gameField) == -1) {
+        while (!detectCollision(*currentPiece, *gameField)) {
             currentPiece->move(0, 1);
         }
         break;
@@ -119,35 +119,19 @@ void Game::handleEvents() {
 }
 
 void Game::update() { 
-
     // update game variables
     gameField->update();
     currentPiece->update();
 
     // detect whether a block has landed
     int collision = detectCollision(*currentPiece, *gameField);
-    switch (collision) {
-    case 1 :
-        // We collided with a block --> bumb the piece back
-        //std::cout << "Debugging collisions:\n";         // ERROR
-        //currentPiece->printGameObjectVector();          // ERROR
-        //gameField->printGameObjectVector();             // ERROR
+    if (detectCollision(*currentPiece, *gameField)) {
         currentPiece->move(0, -1);
-    case 0:
-        // landed on bottom row, no need to bump
-        // absorb the piece into field
         gameField->absorb(*currentPiece);
-        // delete currentPiece;
         // N.B. we don't call destructor because no heap allocation WITHIN the gamePiece struct occurs
         delete currentPiece;
-        // choose new currentPiece
         currentPiece = popPiece();
-
-    case -1 : // no collision
-    default :
-        break;
-    }
-}
+    }}
 
 void Game::render() {
     // clear render buffer & draw window base color
@@ -354,7 +338,7 @@ void Game::hold() {
 // returns: -1 if no collision
 //          0 if collided with the field's floor
 //          1 if collided with a block
-int detectCollision(GameObject piece, GameObject field) {
+bool detectCollision(GameObject piece, GameObject field) {
     std::vector<std::vector<char>> pieceMatrix, fieldMatrix;
     pieceMatrix = piece.accessPixelVec(), fieldMatrix = field.accessPixelVec();
     int fieldHeight = field.getHeight();
@@ -383,11 +367,11 @@ int detectCollision(GameObject piece, GameObject field) {
                         if (pieceMatrix[y][x]) {// && i == (pieceLXY.y + y) && j == (pieceLXY.x + x)) {
                             // check if we hit the bottom
                             if ((pieceLXY.y + y) == fieldHeight) {
-                                return 1;
+                                return true;
                             }
                             // check if the localized coordinates match --> collision
                             if (i == (pieceLXY.y + y) && j == (pieceLXY.x + x)) {
-                                return 1;
+                                return true;
                             }
                         }
                     }
@@ -397,5 +381,5 @@ int detectCollision(GameObject piece, GameObject field) {
     }
 
     // No collision detected
-    return -1;
+    return false;
 }
