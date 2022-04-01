@@ -63,6 +63,10 @@ public:
 
     // wrapper for popping out a current piece
     // and pushing a new random piece onto the piecesQueue
+    // N.B. This function also checks for the gameover conidition
+    // ideally, I want that to occur in the constructor, but right now 
+    // GamePiece con does not have access to the gameField (needed for detectCollision)
+    // so this is the logical place (even if it is in ways,,, illogical)
     GamePiece* popPiece();
 
     // method abandoned but keeping code in case useful
@@ -73,6 +77,8 @@ public:
     // If currently holding a piece, set it as currentPiece
     // and hold the currentPiece at time of event
     void hold();
+
+    SDL_Renderer* getRenderer() { return renderer; }
 
 private:
     const char* windowTitle;        // Title for the window

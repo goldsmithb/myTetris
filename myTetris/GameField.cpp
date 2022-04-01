@@ -63,9 +63,9 @@ void GameField::absorb(GameObject piece) {
         for (int x = 0; x < piece.getWidth(); x++) {
             // record a value where needed
             if (pieceVec[y][x]) {
-                std::cout << "copying a block into the field at: [" << y<<"]["<<x<<"]" << std::endl; // 
+                std::cout << "copy: [" << y<<"]["<<x<<"]" << std::endl; // 
 
-                std::cout << "                             into: [" << (pieceXY.y + y) << "][" << (pieceXY.x + x) << "]" << std::endl; // ERROR
+                std::cout << "into: [" << (pieceXY.y + y) << "] [" << (pieceXY.x + x) << "] " << std::endl; // ERROR
                 this->pixelVec[pieceXY.y + y][pieceXY.x + x] = 1;
             }
         }

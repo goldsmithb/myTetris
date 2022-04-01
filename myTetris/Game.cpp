@@ -139,7 +139,6 @@ void Game::render() {
     SDL_SetRenderDrawColor(renderer, 235, 233, 178, 0xff); // TODO set as a bg color
     SDL_RenderClear(renderer);
 
-
     // Render Game Field space
 
     gameField->render();
@@ -246,6 +245,12 @@ GamePiece* Game::popPiece() {
     GamePiece* newPiece = new GamePiece(renderer, GameObject::gUnit, Piece(prng(mt)), gameField->accessPos());
 
     piecesQueue.push(newPiece);
+
+    //  check game over condition
+    if (detectCollision(*newPiece, *gameField)) {
+        std::cout << "GAME OVER" << std::endl;              // ERROR
+        isRunning = false;
+    }
 
     return ret;
 }
