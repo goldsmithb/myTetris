@@ -1,19 +1,15 @@
 # myTetris
-Tetris clone from scratch written in c++. Just a fun way to learn the basics of game dev, the c++ language, and SDL2.
+Tetris clone from scratch written in C++. Just a fun way to learn the basics of game dev, the c++ language, and SDL2. My first C++ project :,)
 
-## Base Game
-The basic game is nothing special: just marathon tetris.
+## How to play
+The basic game is marathon tetris.
 Use the arrow keys to move the falling piece, X and Z to rotate, and SPACE to hold. Clear lines to increase your score!
 
 ## TODOs
-1. Finish the base game!
-2. Create my own artwork rather than just draw rectangles and outlines for the tetris blocks.
+1. Use templates instead of drawing with rectangles
+2. Add levels
 3. Create a menu system.
-4. Add fun graphics:
-   - blocks explode during line clears.
-   - special animation for getting a tetris.
-   - block colors change based on level.
-5. Add some sort of twist to make it more than just a tetris clone (TBD :3)
+4. Add more interesting graphics:
 
 ## Graphics
 Right now, all graphics are drawn with SDL.
